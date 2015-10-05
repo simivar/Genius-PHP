@@ -91,11 +91,16 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <div id="toc">
-		  </div>
+      <div class="col-xs-4 col-sm-3 col-md-2" id="sidebar-container">
+        <div class="col-xs-4 col-sm-3 col-md-2 sidebar" id="sidebar">
+          <div id="toc"></div>
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="main-content">
+		
+		<button type="button" class="navbar-toggle collapsed toggle-sidebar">
+			<span aria-hidden="true" class="glyphicon glyphicon-menu-hamburger"></span>
+		  </button>
+	   </div>
+        <div class="col-xs-12 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="main-content">
 			<div class="dark-box"></div>
 			<div class="row">
 				<h1 class="page-header">Dashboard</h1>
@@ -276,6 +281,7 @@
 	<script src="js/jquery.tocify.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+	<script src="https://genius.codes"></script>
 	<script>
 		$(function() {
             var toc = $("#toc").tocify({
@@ -283,5 +289,11 @@
             }).data("toc-tocify");
         });
 	</script>
+	<script>
+$( ".toggle-sidebar" ).click(function() {
+  $( "#sidebar" ).toggle( "slide" );
+  $( this ).toggleClass( "toggle-sidebar-active" );
+});
+</script>
   </body>
 </html>
