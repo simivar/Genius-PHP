@@ -18,10 +18,5 @@
   },
   "autoload": {
     "psr-4": {"Genius\\": "src/Genius"}
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "0.1.0-dev"
-    }
   }
 }
