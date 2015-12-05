@@ -3,6 +3,7 @@ namespace Genius;
 class GeniusArtists {
     public $access_token;
     public $http_request;
+
     public function __construct($access_token, $http_request = false){
         $this->access_token = $access_token;
         if(!$http_request){
@@ -11,6 +12,7 @@ class GeniusArtists {
             $this->http_request = $http_request;
         }
     }
+
     /**
      * An artist is how Genius represents the creator of one or more songs (or other documents hosted on Genius). It's usually a musician or group of musicians.
      * @param integer $artist_id Artist's ID
@@ -26,6 +28,7 @@ class GeniusArtists {
             )
         );
     }
+
     /**
      * Documents (songs) for the artist specified. By default, 20 items are returned for each request.
      * @param integer $artist_id ID of the artist. 

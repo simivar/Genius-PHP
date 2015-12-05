@@ -1,8 +1,10 @@
 <?php
 namespace Genius;
+
 class GeniusSongs {
     public $access_token;
     public $http_request;
+
     public function __construct($access_token, $http_request = false){
         $this->access_token = $access_token;		
         if(!$http_request){
@@ -11,6 +13,7 @@ class GeniusSongs {
             $this->http_request = $http_request;
         }
     }
+
     /**
      * A song is a document hosted on Genius. It's usually music lyrics.
      * Data for a song includes details about the document itself and information about all the referents that are attached to it, including the text to which they refer.

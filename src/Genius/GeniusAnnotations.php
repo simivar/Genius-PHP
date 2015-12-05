@@ -1,8 +1,10 @@
 <?php
 namespace Genius;
+
 class GeniusAnnotations {
     public $access_token;
     public $http_request;
+
     public function __construct($access_token, $http_request = false){
         $this->access_token = $access_token;
         if(!$http_request){
@@ -11,6 +13,7 @@ class GeniusAnnotations {
             $this->http_request = $http_request;
         }
     }
+
     /**
      * Gets an annotations data from Genius by it's ID.
      * Annotation data returned from the API includes both the substance of the annotation and the necessary information for displaying it in its original context.

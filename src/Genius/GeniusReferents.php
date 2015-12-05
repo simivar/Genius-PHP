@@ -1,8 +1,10 @@
 <?php
 namespace Genius;
+
 class GeniusReferents {
     public $access_token;
     public $http_request;
+
     public function __construct($access_token, $http_request = false){
         $this->access_token = $access_token;
         if(!$http_request){
@@ -11,6 +13,7 @@ class GeniusReferents {
             $this->http_request = $http_request;
         }
     }
+
     /**
      * Gets referents for specified object (song/webpage) by it's ID.
      * When a new annotation is created either a referent is created with it or that annotation is attached to an existing referent.
@@ -41,5 +44,6 @@ class GeniusReferents {
         );
     }
 }
+
 class GeniusReferentsException extends \Exception {  
 }

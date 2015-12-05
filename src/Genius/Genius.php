@@ -1,12 +1,15 @@
 <?php
 namespace Genius;
+
 class Genius {
     public $access_token;
     public $http_request;
+
     public function __construct($access_token){
         $this->access_token = $access_token;
         $this->http_request = new GeniusHttpRequest( $this->access_token );
     }
+
     public function __get( $name ){
         if(isset($this->{$name})){
             return $this->{$name};
@@ -29,5 +32,6 @@ class Genius {
         }
     }
 }
+
 class GeniusException extends \Exception {
 }
