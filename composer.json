@@ -3,6 +3,7 @@
   "description": "Genius PHP is a open source library that allows you to access Genius API from your PHP application. Right now it supports only access_token connection (only get methods).",
   "keywords": ["genius", "rapgenius", "api", "psr-4"],
   "homepage": "https://github.com/simivar/Genius-PHP",
+  "version": "0.1.0",
   "type": "library",
   "license": "MIT",
   "authors": [
