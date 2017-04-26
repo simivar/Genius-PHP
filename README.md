@@ -1,3 +1,5 @@
+# This is not production ready codebase! This is development branch! Use different branch!
+
 # Genius PHP [![SensioLabsInsight](https://insight.sensiolabs.com/projects/030b82ab-b32c-4ac2-9fa4-e3162017e68e/mini.png)](https://insight.sensiolabs.com/projects/030b82ab-b32c-4ac2-9fa4-e3162017e68e)
 Genius PHP is a open source library that allows you to access [Genius API](https://docs.genius.com/) from your PHP application. Right now it supports only `access_token` connection (only `get` methods).
 
