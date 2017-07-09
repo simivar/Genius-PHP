@@ -2,18 +2,19 @@
 
 namespace Genius;
 
+use Http\Client\Common\PluginClient;
 use Http\Client\HttpClient;
 use Http\Discovery\MessageFactoryDiscovery;
 use Http\Message\Authentication;
-use Psr\Http\Message\RequestInterface;
+use Http\Message\MessageFactory;
 
 class Genius
 {
     
-    /** @var RequestInterface */
+    /** @var MessageFactory */
     protected $requestFactory;
     
-    /** @var ConnectGenius */
+    /** @var PluginClient */
     protected $httpClient;
     
     /** @var Authentication */
@@ -37,6 +38,30 @@ class Genius
         }
         
         $this->httpClient = $connection->createConnection();
+    }
+    
+    /**
+     * @return PluginClient
+     */
+    public function getHttpClient()
+    {
+        return $this->httpClient;
+    }
+    
+    /**
+     * @return Authentication
+     */
+    public function getAuthentication()
+    {
+        return $this->authentication;
+    }
+    
+    /**
+     * @return MessageFactory
+     */
+    public function getRequestFactory()
+    {
+        return $this->requestFactory;
     }
     
 }

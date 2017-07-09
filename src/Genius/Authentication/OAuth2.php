@@ -155,6 +155,14 @@ final class OAuth2 implements Authentication
         return $this->state;
     }
     
+    /**
+     * @return Scope
+     */
+    public function getScope()
+    {
+        return $this->scope;
+    }
+    
     public function hasValidAccessToken()
     {
         if ($this->accessToken !== null) {
