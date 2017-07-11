@@ -32,7 +32,7 @@ $authentication = new \Genius\Authentication\OAuth2(
 );
 
 if (isset($_GET[ 'code' ])) {
-    $ref = $oauth->refreshToken($_GET[ 'code' ]);
+    $authentication->refreshToken($_GET[ 'code' ]);
 } else {
     // read access token you got for user from your database or redirect him
     if (!$accessTokenFromDatabase) {
