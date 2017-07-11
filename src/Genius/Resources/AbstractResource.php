@@ -22,7 +22,7 @@ class AbstractResource
         $this->genius = $genius;
     }
     
-    public function sendRequest(
+    protected function sendRequest(
         $method,
         $uri,
         array $headers = [],
@@ -34,7 +34,7 @@ class AbstractResource
         return json_decode($this->genius->getHttpClient()->sendRequest($req)->getBody());
     }
     
-    public function requireScope($scope)
+    protected function requireScope($scope)
     {
         $scopes = $this->genius->getAuthentication()->getScope();
         
