@@ -1,1 +1,3 @@
 *.stackdump
+.idea/
+vendor/

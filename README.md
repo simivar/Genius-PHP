@@ -1,27 +1,53 @@
-# Genius PHP [![SensioLabsInsight](https://insight.sensiolabs.com/projects/030b82ab-b32c-4ac2-9fa4-e3162017e68e/mini.png)](https://insight.sensiolabs.com/projects/030b82ab-b32c-4ac2-9fa4-e3162017e68e)
-Genius PHP is a open source library that allows you to access [Genius API](https://docs.genius.com/) from your PHP application. Right now it supports only `access_token` connection (only `get` methods).
+# Genius PHP
+Genius PHP is a open source library that allows you to access [Genius API](https://docs.genius.com/) from your PHP application. It supports oAuth 2 from version 1.0.
 
 ## Getting started
-To get started download `autoload.php` with `src` directory and put it together. Then include `autoload.php` in your PHP file - now you can use every class from `src` directory!
+Genius PHP is avialable via [Composer](https://getcomposer.org/). Version 1.0 does not implement HTTP Client on it's own anymore and uses [HTTPlug](http://httplug.io/) abstraction so you are free to choose any HTTP Client you want that depends on [php-http/client-implementation virutal package](https://packagist.org/providers/php-http/client-implementation). 
 
-## Usage
-> **Note:** This version of Genius PHP requires PHP version of 5.3 or higher.
-
-Thanks to autoloader you don't have to manually include all the classes, just the autoloader. Then after creating new instance of `Genius` class you can use every other just by using `->classname`. Of course you can create manually every instance of every class if you want to but it's easier to create main `Genius` class - you don't have to put your access token everywhere.
-
-```php
-require_once('autoload.php');
-
-$geniusphp = new \Genius\Genius('access_token');
-
-// let's search for the most popular song on Genius for Kendrick Lamar
-$search = $geniusphp->search->get('Kendrick Lamar')->response->hits[0]->result->id
-
-// and get everything about that song
-$song = $geniusphp->songs->get( $search );
+```
+composer require simivar/genius-php php-http/message php-http/guzzle6-adapter
 ```
 
-Complete documentation, installation instructions, and examples are available at: [http://simivar.github.io/Genius-PHP/](http://simivar.github.io/Genius-PHP/)
+## Usage
+> **Note:** This version of Genius PHP requires PHP version of 5.6 or higher.
+
+You can use every resource available with classes from *Resources* namespace. You can create main `Genius` object and use getters or create every object on your own. 
+
+```php
+require_once('vendor/autoload.php');
+
+$authentication = new \Genius\Authentication\OAuth2(
+  'YOUR_CLIENT_ID',
+  'YOUR_CLIENT_SECRET',
+  'YOUR_REDIRECT_URL',
+  new \Genius\Authentication\Scope([
+      \Genius\Authentication\Scope::SCOPE_ME,
+      \Genius\Authentication\Scope::SCOPE_CREATE_ANNOTATION,
+      \Genius\Authentication\Scope::SCOPE_MANAGE_ANNOTATION,
+      \Genius\Authentication\Scope::SCOPE_VOTE,
+  ]),
+  null
+);
+
+if (isset($_GET[ 'code' ])) {
+    $authentication->refreshToken($_GET[ 'code' ]);
+} else {
+    // read access token you got for user from your database or redirect him
+    if (!$accessTokenFromDatabase) {
+        header('Location: ' . $oauth->getAuthUrl());
+    } else {
+        $oauth->setAccessToken($accessTokenFromDatabase);
+    }
+}
+
+$genius = new \Genius\Genius($authentication);
+$upvoteAnnotation = $genius->getAnnotationsResource()->upvote(11852248);
+```
+
+Complete documentation, installation instructions, and examples are available at: [http://simivar.github.io/Genius-PHP/](http://simivar.github.io/Genius-PHP/).
+
+## Versioning
+Genius PHP is created using [Semver](http://semver.org/). All minor and patch updates are backwards compatibile. ``0.1`` branch is no longer maintained.
 
 ## License
 Please see the [license file](https://github.com/simivar/Genius-PHP/blob/master/LICENSE) for more information.
