@@ -1,5 +1,3 @@
-# This is not production ready codebase! This is development branch! Use different branch!
-
 # Genius PHP
 Genius PHP is a open source library that allows you to access [Genius API](https://docs.genius.com/) from your PHP application. It supports oAuth 2 from version 1.0.
 
