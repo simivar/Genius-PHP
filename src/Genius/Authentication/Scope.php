@@ -21,16 +21,6 @@ class Scope
      * @var array
      */
     private $scope = [];
-
-    /**
-     * @var array All Genius API available scopes.
-     */
-    private $availableScopes = [
-        self::SCOPE_ME,
-        self::SCOPE_CREATE_ANNOTATION,
-        self::SCOPE_MANAGE_ANNOTATION,
-        self::SCOPE_VOTE,
-    ];
     
     /**
      * Scope constructor.
@@ -85,7 +75,7 @@ class Scope
      */
     public function isValidScope($scope)
     {
-        if(in_array($scope, $this->availableScopes)){
+        if(in_array($scope, self::getAvailableScopes())){
             return true;
         }
 
@@ -106,6 +96,19 @@ class Scope
         }
 
         return false;
+    }
+
+    /**
+     * @return array All Genius API available scopes.
+     */
+    public static function getAvailableScopes()
+    {
+        return [
+            self::SCOPE_ME,
+            self::SCOPE_CREATE_ANNOTATION,
+            self::SCOPE_MANAGE_ANNOTATION,
+            self::SCOPE_VOTE,
+        ];
     }
 
     public function __toString()
