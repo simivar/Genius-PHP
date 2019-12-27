@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Genius;
 
-final class ConnectGeniusException extends GeniusException
+class GeniusException extends \Exception
 {
     
 }

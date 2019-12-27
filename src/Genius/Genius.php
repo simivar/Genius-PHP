@@ -63,6 +63,9 @@ class Genius
         return $this->httpClient;
     }
 
+    /**
+     * @return Authentication|OAuth2
+     */
     public function getAuthentication(): Authentication
     {
         return $this->authentication;

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Support for HTTPlug 2.0
 - Type-hints everywhere
+- Introduced `Genius\GeniusException`
 
 ### Changed
 
@@ -26,6 +27,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   $text_format = 'dom', ?int $per_page = null, ?int $page = null)`
 - `Genius\Authentication\OAuth2::getAccessToken` returns `null` instead of `false`
 - `Genius\Authentication\OAuth2::refreshToken` returns `null` instead of `false`
+- All Exceptions thrown by library are children of `Genius\GeniusException`
+- Resources throw `Genius\Resources\ResourceException` when calling a method that requires 
+  `scope` and `Bearer` authentication is used
+- Exception messages in `Genius\Resources namespace` are now more developer-friendly contain 
+  called method name and class
 
 ### Removed
 
