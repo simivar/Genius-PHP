@@ -9,13 +9,12 @@ namespace Genius\Authentication;
  */
 class Scope
 {
+    public const SCOPE_ME = 'me';
+    public const SCOPE_CREATE_ANNOTATION = 'create_annotation';
+    public const SCOPE_MANAGE_ANNOTATION = 'manage_annotation';
+    public const SCOPE_VOTE = 'vote';
 
-    const SCOPE_ME = 'me';
-    const SCOPE_CREATE_ANNOTATION = 'create_annotation';
-    const SCOPE_MANAGE_ANNOTATION = 'manage_annotation';
-    const SCOPE_VOTE = 'vote';
-
-    const SCOPE_SEPARATOR = ' ';
+    protected const SCOPE_SEPARATOR = ' ';
 
     /**
      * @var array
@@ -36,12 +35,10 @@ class Scope
     
     /**
      * Adds scope.
-     *
      * @param string $scope
-     *
      * @return $this
      */
-    public function addScope($scope)
+    public function addScope(string $scope): self
     {
         if($this->isValidScope($scope)){
             $this->scope[$scope] = $scope;
@@ -52,12 +49,10 @@ class Scope
     
     /**
      * Removes already set scope.
-     *
      * @param string $scope
-     *
      * @return $this
      */
-    public function removeScope($scope)
+    public function removeScope(string $scope): self
     {
         if($this->isValidScope($scope) && $this->hasScope($scope)){
             unset($this->scope[$scope]);
@@ -65,17 +60,15 @@ class Scope
 
         return $this;
     }
-    
+
     /**
      * Checks if scope is valid.
-     *
      * @param string $scope
-     *
      * @return bool
      */
-    public function isValidScope($scope)
+    public function isValidScope(string $scope): bool
     {
-        if(in_array($scope, self::getAvailableScopes())){
+        if(in_array($scope, self::getAvailableScopes(), true)){
             return true;
         }
 
@@ -84,14 +77,12 @@ class Scope
     
     /**
      * Checks if scope was already set.
-     *
-     * @param $scope
-     *
+     * @param string $scope
      * @return bool
      */
-    public function hasScope($scope)
+    public function hasScope(string $scope): bool
     {
-        if(in_array($scope, $this->scope)){
+        if(in_array($scope, $this->scope, true)){
             return true;
         }
 
@@ -101,7 +92,7 @@ class Scope
     /**
      * @return array All Genius API available scopes.
      */
-    public static function getAvailableScopes()
+    public static function getAvailableScopes(): array
     {
         return [
             self::SCOPE_ME,
@@ -115,5 +106,4 @@ class Scope
     {
         return implode(self::SCOPE_SEPARATOR, $this->scope);
     }
-
 }

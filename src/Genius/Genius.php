@@ -2,6 +2,7 @@
 
 namespace Genius;
 
+use Genius\Authentication\OAuth2;
 use Genius\Resources;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpClient;
@@ -23,14 +24,13 @@ use Http\Message\MessageFactory;
  */
 class Genius
 {
-    
     /** @var MessageFactory */
     protected $requestFactory;
     
     /** @var PluginClient */
     protected $httpClient;
     
-    /** @var Authentication */
+    /** @var Authentication|OAuth2 */
     protected $authentication;
     
     /** @var array All created resource objects */
@@ -41,8 +41,9 @@ class Genius
      *
      * @param Authentication $authentication
      * @param HttpClient|null $httpClient
+     * @throws ConnectGeniusException
      */
-    public function __construct(Authentication $authentication, HttpClient $httpClient = null)
+    public function __construct(Authentication $authentication, ?HttpClient $httpClient = null)
     {
         $this->authentication = $authentication;
         $this->requestFactory = MessageFactoryDiscovery::find();
@@ -55,27 +56,18 @@ class Genius
         
         $this->httpClient = $connection->createConnection();
     }
-    
-    /**
-     * @return PluginClient
-     */
-    public function getHttpClient()
+
+    public function getHttpClient(): PluginClient
     {
         return $this->httpClient;
     }
-    
-    /**
-     * @return Authentication
-     */
-    public function getAuthentication()
+
+    public function getAuthentication(): Authentication
     {
         return $this->authentication;
     }
-    
-    /**
-     * @return MessageFactory
-     */
-    public function getRequestFactory()
+
+    public function getRequestFactory(): MessageFactory
     {
         return $this->requestFactory;
     }
@@ -99,5 +91,4 @@ class Genius
         
         return $this->resourceObjects[ $name ];
     }
-    
 }

@@ -15,8 +15,7 @@ use Psr\Http\Message\UriInterface;
 
 class ConnectGenius
 {
-    
-    protected $endpoint = 'http://api.genius.com/';
+    protected const ENDPOINT = 'http://api.genius.com/';
     
     /** @var HttpClient */
     protected $httpClient;
@@ -24,54 +23,61 @@ class ConnectGenius
     /** @var  UriFactory */
     protected $uriFactory;
     
-    /** @var Authentication */
+    /** @var Authentication|OAuth2 */
     protected $authentication;
-    
+
+    /**
+     * ConnectGenius constructor.
+     * @param Authentication|OAuth2 $authentication
+     * @throws ConnectGeniusException
+     */
     public function __construct(Authentication $authentication)
     {
         $this->setAuthentication($authentication);
     }
     
-    public function createConnection()
+    public function createConnection(): PluginClient
     {
         $plugins = [
-            new AddHostPlugin($this->getUriFactory()->createUri($this->endpoint)),
+            new AddHostPlugin($this->getUriFactory()->createUri(self::ENDPOINT)),
             new AuthenticationPlugin($this->authentication),
         ];
-        
-        $client = new PluginClient(
+
+        return new PluginClient(
             $this->getHttpClient(),
             $plugins
         );
-        
-        return $client;
     }
     
-    public function setUriFactory(UriInterface $uriFactory)
+    public function setUriFactory(UriInterface $uriFactory): ConnectGenius
     {
         $this->uriFactory = $uriFactory;
         
         return $this;
     }
     
-    public function getUriFactory()
+    public function getUriFactory(): UriFactory
     {
         if ($this->uriFactory === null) {
-            
             $this->uriFactory = UriFactoryDiscovery::find();
         }
         
         return $this->uriFactory;
     }
     
-    public function setHttpClient(HttpClient $httpClient)
+    public function setHttpClient(HttpClient $httpClient): ConnectGenius
     {
         $this->httpClient = $httpClient;
         
         return $this;
     }
-    
-    public function setAuthentication(Authentication $authentication)
+
+    /**
+     * @param Authentication $authentication
+     * @return bool
+     * @throws ConnectGeniusException
+     */
+    public function setAuthentication(Authentication $authentication): bool
     {
         if ($authentication instanceof Authentication\Bearer || $authentication instanceof OAuth2) {
             $this->authentication = $authentication;
@@ -82,7 +88,7 @@ class ConnectGenius
         throw new ConnectGeniusException('Genius API supports only Bearer and OAuth2 authentication.');
     }
     
-    protected function getHttpClient()
+    protected function getHttpClient(): HttpClient
     {
         if ($this->httpClient === null) {
             $this->httpClient = HttpClientDiscovery::find();

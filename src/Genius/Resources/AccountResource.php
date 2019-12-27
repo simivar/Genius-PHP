@@ -11,12 +11,15 @@ use Genius\Authentication\Scope;
  */
 class AccountResource extends AbstractResource
 {
-    
-    public function get($text_format = 'dom')
+    /**
+     * @param string $text_format
+     * @return \stdClass
+     * @throws ResourceException
+     */
+    public function get(string $text_format = 'dom'): \stdClass
     {
         $this->requireScope(Scope::SCOPE_ME);
         
         return $this->sendRequest('GET', 'account/?' . http_build_query(['text_format' => $text_format]));
     }
-    
 }

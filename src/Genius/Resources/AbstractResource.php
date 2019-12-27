@@ -8,13 +8,14 @@
 
 namespace Genius\Resources;
 
+use Genius\Authentication\Scope;
 use Genius\Genius;
 
 class AbstractResource
 {
-    
-    const API_URL = 'https://api.genius.com/';
-    
+    protected const API_URL = 'https://api.genius.com/';
+
+    /** @var Genius */
     protected $genius;
     
     public function __construct(Genius $genius)
@@ -23,26 +24,29 @@ class AbstractResource
     }
     
     protected function sendRequest(
-        $method,
-        $uri,
+        string $method,
+        string $uri,
         array $headers = [],
         $body = null,
-        $protocolVersion = '1.1'
-    ) {
+        string $protocolVersion = '1.1'
+    ): \stdClass {
         $req =  $this->genius->getRequestFactory()->createRequest($method, self::API_URL . $uri, $headers, $body, $protocolVersion);
-    
-        return json_decode($this->genius->getHttpClient()->sendRequest($req)->getBody());
+
+        return json_decode($this->genius->getHttpClient()->sendRequest($req)->getBody()->getContents(), false);
     }
-    
-    protected function requireScope($scope)
+
+    /**
+     * @param $scope
+     * @return bool
+     * @throws ResourceException
+     */
+    protected function requireScope(string $scope): bool
     {
         $scopes = $this->genius->getAuthentication()->getScope();
-        
         if ($scopes->hasScope($scope)) {
             return true;
         }
         
         throw new ResourceException(sprintf('You have no access to required scope %s for that action.', $scope));
     }
-    
 }
