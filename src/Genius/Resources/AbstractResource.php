@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: simivar
- * Date: 2017-06-18
- * Time: 21:22
- */
+declare(strict_types=1);
 
 namespace Genius\Resources;
 
@@ -42,6 +37,7 @@ class AbstractResource
      */
     protected function requireScope(string $scope): bool
     {
+        /** @var Scope $scopes */
         $scopes = $this->genius->getAuthentication()->getScope();
         if ($scopes->hasScope($scope)) {
             return true;
