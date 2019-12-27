@@ -9,7 +9,7 @@ composer require simivar/genius-php php-http/message php-http/guzzle6-adapter
 ```
 
 ## Usage
-> **Note:** This version of Genius PHP requires PHP version of 5.6 or higher.
+> **Note:** This version of Genius PHP requires PHP version of 7.1 or higher.
 
 You can use every resource available with classes from *Resources* namespace. You can create main `Genius` object and use getters or create every object on your own. 
 
@@ -34,9 +34,9 @@ if (isset($_GET[ 'code' ])) {
 } else {
     // read access token you got for user from your database or redirect him
     if (!$accessTokenFromDatabase) {
-        header('Location: ' . $oauth->getAuthUrl());
+        header('Location: ' . $authentication->getAuthUrl());
     } else {
-        $oauth->setAccessToken($accessTokenFromDatabase);
+        $authentication->setAccessToken($accessTokenFromDatabase);
     }
 }
 

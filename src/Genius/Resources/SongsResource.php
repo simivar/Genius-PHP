@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Genius\Resources;
 
@@ -10,10 +11,8 @@ namespace Genius\Resources;
  */
 class SongsResource extends AbstractResource
 {
-    
-    public function get($id, $text_format = 'dom')
+    public function get(int $id, string $text_format = 'dom'): \stdClass
     {
         return $this->sendRequest('GET', 'songs/' . $id . '/?' . http_build_query(['text_format' => $text_format]));
     }
-    
 }
