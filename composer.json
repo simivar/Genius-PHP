@@ -15,14 +15,14 @@
   ],
   "require": {
     "php": "^7.1",
-    "php-http/httplug": "^2.0",
-    "php-http/message": "^1.8",
-    "php-http/client-common": "^2.0",
-    "php-http/discovery": "^1.7",
-    "php-http/guzzle6-adapter": "^2.0",
+    "php-http/httplug": "^1.0 || ^2.0",
+    "php-http/message": "^1.0",
+    "php-http/client-common": "^1.0 || ^2.0",
+    "php-http/discovery": "^1.0",
     "ext-json": "*"
   },
   "require-dev": {
+    "php-http/guzzle6-adapter": "^2.0",
     "phpunit/phpunit" : "^8.5"
   },
   "autoload": {
