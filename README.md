@@ -34,9 +34,9 @@ if (isset($_GET[ 'code' ])) {
 } else {
     // read access token you got for user from your database or redirect him
     if (!$accessTokenFromDatabase) {
-        header('Location: ' . $oauth->getAuthUrl());
+        header('Location: ' . $authentication->getAuthUrl());
     } else {
-        $oauth->setAccessToken($accessTokenFromDatabase);
+        $authentication->setAccessToken($accessTokenFromDatabase);
     }
 }
 
