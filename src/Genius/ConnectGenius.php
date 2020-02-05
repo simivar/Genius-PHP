@@ -13,6 +13,7 @@ use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
 use Http\Message\Authentication;
 use Psr\Http\Message\UriFactoryInterface;
+use Genius\Exception\ConnectGeniusException;
 
 class ConnectGenius
 {
