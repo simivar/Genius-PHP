@@ -9,10 +9,9 @@ use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpClient;
 use Http\Discovery\HttpClientDiscovery;
-use Http\Discovery\UriFactoryDiscovery;
+use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Message\Authentication;
-use Http\Message\UriFactory;
-use Psr\Http\Message\UriInterface;
+use Psr\Http\Message\UriFactoryInterface;
 
 class ConnectGenius
 {
@@ -21,7 +20,7 @@ class ConnectGenius
     /** @var HttpClient */
     protected $httpClient;
     
-    /** @var  UriFactory */
+    /** @var  UriFactoryInterface */
     protected $uriFactory;
     
     /** @var Authentication|OAuth2 */
@@ -50,17 +49,17 @@ class ConnectGenius
         );
     }
     
-    public function setUriFactory(UriInterface $uriFactory): ConnectGenius
+    public function setUriFactory(UriFactoryInterface $uriFactory): ConnectGenius
     {
         $this->uriFactory = $uriFactory;
         
         return $this;
     }
     
-    public function getUriFactory(): UriFactory
+    public function getUriFactory(): UriFactoryInterface
     {
         if ($this->uriFactory === null) {
-            $this->uriFactory = UriFactoryDiscovery::find();
+            $this->uriFactory = Psr17FactoryDiscovery::findUrlFactory();
         }
         
         return $this->uriFactory;
