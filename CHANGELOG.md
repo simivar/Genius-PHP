@@ -16,6 +16,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   now on `success` it returns data from `result` object preperty
   and on `error` it throws `Genius\Exception\ApiResponseErrorException`. 
   This means that return value and exceptions of **every** `Resource` has changed!
+- `Genius\ConnectGenius` is based on PSR-17 Discovery instead of deprecated `Http\Discovery\UriFactoryDiscovery`
+- `Genius\ConnectGenius::getUriFactory` returns now `Psr\Http\Message\UriFactoryInterface`
+  instead of `Psr\Http\Message\UriInterface`
+- `Genius\ConnectGenius::setUriFactory` now takes as first parameter `Psr\Http\Message\UriFactoryInterface`
+  instead of `Psr\Http\Message\UriInterface`
+- `Genius\Genius::getRequestFactory` returns now `Psr\Http\Message\RequestFactoryInterface` 
+  instead of `Http\Message\MessageFactory`
 
 ### Removed
 
