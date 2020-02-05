@@ -7,9 +7,10 @@ use Genius\Authentication\OAuth2;
 use Genius\Resources;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpClient;
-use Http\Discovery\MessageFactoryDiscovery;
+use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Message\Authentication;
-use Http\Message\MessageFactory;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 /**
  * Class Genius
@@ -25,7 +26,7 @@ use Http\Message\MessageFactory;
  */
 class Genius
 {
-    /** @var MessageFactory */
+    /** @var RequestFactoryInterface */
     protected $requestFactory;
     
     /** @var PluginClient */
@@ -47,7 +48,7 @@ class Genius
     public function __construct(Authentication $authentication, ?HttpClient $httpClient = null)
     {
         $this->authentication = $authentication;
-        $this->requestFactory = MessageFactoryDiscovery::find();
+        $this->requestFactory = Psr17FactoryDiscovery::findRequestFactory();
         
         $connection = new ConnectGenius($authentication);
         
@@ -71,9 +72,14 @@ class Genius
         return $this->authentication;
     }
 
-    public function getRequestFactory(): MessageFactory
+    public function getRequestFactory(): RequestFactoryInterface
     {
         return $this->requestFactory;
+    }
+
+    public function getStreamFactory(): StreamFactoryInterface
+    {
+        return Psr17FactoryDiscovery::findStreamFactory();
     }
     
     public function __call($name, $arguments)
