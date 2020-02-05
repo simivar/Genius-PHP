@@ -9,8 +9,8 @@ use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Client\Common\PluginClientFactory;
 use Http\Client\HttpClient;
-use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Psr17FactoryDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
 use Http\Message\Authentication;
 use Psr\Http\Message\UriFactoryInterface;
 
@@ -89,7 +89,7 @@ class ConnectGenius
     protected function getHttpClient(): HttpClient
     {
         if ($this->httpClient === null) {
-            $this->httpClient = HttpClientDiscovery::find();
+            $this->httpClient = Psr18ClientDiscovery::find();
         }
         
         return $this->httpClient;
