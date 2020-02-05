@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Genius\Resources;
 
 use Genius\Authentication\Scope;
+use Genius\Exception\ResourceException;
 
 /**
  * Class AnnotationsResource

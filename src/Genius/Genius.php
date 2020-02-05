@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Genius;
 
 use Genius\Authentication\OAuth2;
+use Genius\Exception\ConnectGeniusException;
 use Genius\Resources;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpClient;

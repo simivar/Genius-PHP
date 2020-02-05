@@ -9,6 +9,7 @@ use Genius\Genius;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use stdClass;
+use Genius\Exception\ResourceException;
 
 class AbstractResource
 {
