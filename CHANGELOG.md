@@ -8,7 +8,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Introduced `Genius\Exception\ApiResponseErrorException`
+
 ### Changed
+
+- Object returned by and Exceptions thrown by `Genius\Resources\AbstractResource::sendRequest` changed
+  now on `success` it returns data from `result` object preperty
+  and on `error` it throws `Genius\Exception\ApiResponseErrorException`. 
+  This means that return value and exceptions of **every** `Resource` has changed!
 
 ### Removed
 
