@@ -7,6 +7,7 @@ use Genius\Authentication\OAuth2;
 use Http\Client\Common\Plugin\AddHostPlugin;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Client\Common\PluginClient;
+use Http\Client\Common\PluginClientFactory;
 use Http\Client\HttpClient;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Psr17FactoryDiscovery;
@@ -43,10 +44,7 @@ class ConnectGenius
             new AuthenticationPlugin($this->authentication),
         ];
 
-        return new PluginClient(
-            $this->getHttpClient(),
-            $plugins
-        );
+        return (new PluginClientFactory())->createClient($this->getHttpClient(), $plugins);
     }
     
     public function setUriFactory(UriFactoryInterface $uriFactory): ConnectGenius
