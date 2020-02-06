@@ -3,33 +3,22 @@ declare(strict_types=1);
 
 namespace Genius\Resources;
 
-use Genius\Authentication\OAuth2;
-use Genius\Genius;
 use Genius\HttpClient\Requester;
-use Genius\Exception\ResourceException;
 
 class AbstractResource
 {
     /** @var Requester */
     protected $requester;
 
-    /** @var Genius */
-    protected $genius;
-
-    public function __construct(Genius $genius)
+    public function __construct(Requester $requester)
     {
-        $this->genius = $genius;
-        $this->requester = new Requester($genius->getHttpClient());
+        $this->requester = $requester;
     }
 
-    /**
-     * @param $scope
-     * @return bool
-     * @throws ResourceException
-     */
     protected function requireScope(string $scope): bool
     {
-        if (!($this->genius->getAuthentication() instanceof OAuth2)) {
+        return true;
+        /*if (!($this->genius->getAuthentication() instanceof OAuth2)) {
             throw new ResourceException(sprintf(
                 '"%s" requires "%s" scope which is available only when using OAuth2 authentication.',
                 $this->getCallerClassAndFunctionName(),
@@ -46,7 +35,7 @@ class AbstractResource
             'You have no access to required scope "%s" for "%s" action.',
             $scope,
             $this->getCallerClassAndFunctionName()
-        ));
+        ));*/
     }
 
     private function getCallerClassAndFunctionName(): string
