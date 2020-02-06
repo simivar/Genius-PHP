@@ -4,102 +4,96 @@ declare(strict_types=1);
 namespace Genius;
 
 use Genius\Authentication\OAuth2;
-use Genius\Exception\ConnectGeniusException;
+use Genius\HttpClient\ClientConfiguration;
+use Genius\HttpClient\Requester;
 use Genius\Resources;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpClient;
-use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Message\Authentication;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class Genius
- * @package Genius
- *
- * @method Resources\AccountResource getAccountResource()
- * @method Resources\AnnotationsResource getAnnotationsResource()
- * @method Resources\ArtistsResource getArtistsResource()
- * @method Resources\ReferentsResource getReferentsResource()
- * @method Resources\SearchResource getSearchResource()
- * @method Resources\SongsResource getSongsResource()
- * @method Resources\WebPagesResource getWebPagesResource()
- */
 class Genius
 {
-    /** @var RequestFactoryInterface */
-    protected $requestFactory;
-    
-    /** @var PluginClient */
-    protected $httpClient;
-    
     /** @var Authentication|OAuth2 */
     protected $authentication;
-    
-    /** @var array All created resource objects */
-    protected $resourceObjects = [];
-    
-    /**
-     * ClientGenius constructor.
-     *
-     * @param Authentication $authentication
-     * @param HttpClient|null $httpClient
-     * @throws ConnectGeniusException
-     */
-    public function __construct(Authentication $authentication, ?HttpClient $httpClient = null)
+
+    /** @var ClientConfiguration */
+    protected $clientConfiguration;
+
+    /** @var Requester */
+    protected $requester;
+
+    /** @var HttpClient */
+    protected $httpClient;
+
+    public function __construct(Authentication $authentication)
     {
         $this->authentication = $authentication;
-        $this->requestFactory = Psr17FactoryDiscovery::findRequestFactory();
-        
-        $connection = new ConnectGenius($authentication);
-        
-        if ($httpClient !== null) {
-            $connection->setHttpClient($httpClient);
-        }
-        
-        $this->httpClient = $connection->createConnection();
     }
 
-    public function getHttpClient(): PluginClient
+    public function setClientConfiguration(ClientConfiguration $clientConfiguration): void
     {
+        $this->clientConfiguration = $clientConfiguration;
+    }
+
+    public function setRequester(Requester $requester): void
+    {
+        $this->requester = $requester;
+    }
+
+    private function getRequester(): Requester
+    {
+        if ($this->requester === null) {
+            $this->requester = new Requester($this->getClient());
+        }
+
+        return $this->requester;
+    }
+
+    protected function getClient(): PluginClient
+    {
+        if ($this->clientConfiguration === null) {
+            $this->clientConfiguration = new ClientConfiguration($this->authentication);
+        }
+
+        if ($this->httpClient === null) {
+            $this->httpClient = $this->clientConfiguration->createClient();
+        }
+
         return $this->httpClient;
     }
 
-    /**
-     * @return Authentication|OAuth2
-     */
-    public function getAuthentication(): Authentication
+    public function getAccountResource(): Resources\AccountResource
     {
-        return $this->authentication;
+        return new Resources\AccountResource($this->getRequester());
     }
 
-    public function getRequestFactory(): RequestFactoryInterface
+    public function getAnnotationsResource(): Resources\AnnotationsResource
     {
-        return $this->requestFactory;
+        return new Resources\AnnotationsResource($this->getRequester());
     }
 
-    public function getStreamFactory(): StreamFactoryInterface
+    public function getArtistsResource(): Resources\ArtistsResource
     {
-        return Psr17FactoryDiscovery::findStreamFactory();
+        return new Resources\ArtistsResource($this->getRequester());
     }
-    
-    public function __call($name, $arguments)
+
+    public function getReferentsResource(): Resources\ReferentsResource
     {
-        if (strpos($name, 'get') !== 0) {
-            return false;
-        }
-        
-        $name = '\\Genius\\Resources\\' . substr($name, 3);
-        if (!class_exists($name)) {
-            return false;
-        }
-        
-        if (isset($this->resourceObjects[ $name ])) {
-            return $this->resourceObjects[ $name ];
-        }
-        
-        $this->resourceObjects[ $name ] = new $name($this);
-        
-        return $this->resourceObjects[ $name ];
+        return new Resources\ReferentsResource($this->getRequester());
+    }
+
+    public function getSearchResource(): Resources\SearchResource
+    {
+        return new Resources\SearchResource($this->getRequester());
+    }
+
+    public function getSongsResource(): Resources\SongsResource
+    {
+        return new Resources\SongsResource($this->getRequester());
+    }
+
+    public function getWebPagesResource(): Resources\WebPagesResource
+    {
+        return new Resources\WebPagesResource($this->getRequester());
     }
 }
