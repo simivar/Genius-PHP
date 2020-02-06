@@ -6,16 +6,25 @@ use Genius\Exception\ApiResponseErrorException;
 use Genius\Genius;
 use Psr\Http\Message\RequestInterface;
 use stdClass;
+use Psr\Http\Client\ClientInterface;
 
 class Requester {
     protected const API_URL = 'https://api.genius.com/';
 
     protected const OK_STATUS_CODE = 200;
 
+    /** @var ClientInterface */
+    private $httpClient;
+
     /** @var Genius */
     private $genius;
 
-    public function __construct(Genius $genius)
+    public function __construct(ClientInterface $httpClient)
+    {
+        $this->httpClient = $httpClient;
+    }
+
+    public function setGenius(Genius $genius): void
     {
         $this->genius = $genius;
     }
@@ -72,7 +81,7 @@ class Requester {
     {
         $req = $this->createRequest($method, $uri, $headers, $body);
 
-        $response = $this->genius->getHttpClient()->sendRequest($req);
+        $response = $this->httpClient->sendRequest($req);
         $decodedBody = json_decode($response->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
         if ($response->getStatusCode() === self::OK_STATUS_CODE) {
             return $decodedBody->response;
