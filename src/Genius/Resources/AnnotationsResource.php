@@ -12,7 +12,7 @@ class AnnotationsResource extends AbstractResource
 {
     public function get(int $id, string $text_format = 'dom'): \stdClass
     {
-        return $this->getMethod(
+        return $this->requester->get(
             sprintf('annotations/%s', $id),
             ['text_format' => $text_format]
         );
@@ -22,7 +22,7 @@ class AnnotationsResource extends AbstractResource
     {
         $this->requireScope(Scope::SCOPE_CREATE_ANNOTATION);
 
-        return $this->postMethod('annotations', [
+        return $this->requester->post('annotations', [
             'annotation' => $annotation,
             'referent' => $referent,
             'web_page' => $web_page,
@@ -33,7 +33,7 @@ class AnnotationsResource extends AbstractResource
     {
         $this->requireScope(Scope::SCOPE_MANAGE_ANNOTATION);
 
-        return $this->putMethod(
+        return $this->requester->put(
             sprintf('annotations/%s', $id),
             [
                 'annotation' => $annotation,
@@ -47,27 +47,27 @@ class AnnotationsResource extends AbstractResource
     {
         $this->requireScope(Scope::SCOPE_MANAGE_ANNOTATION);
 
-        return $this->deleteMethod(sprintf('annotations/%s', $id));
+        return $this->requester->delete(sprintf('annotations/%s', $id));
     }
 
     public function upvote(int $id): \stdClass
     {
         $this->requireScope(Scope::SCOPE_VOTE);
 
-        return $this->putMethod(sprintf('annotations/%s/upvote', $id));
+        return $this->requester->put(sprintf('annotations/%s/upvote', $id));
     }
 
     public function downvote(int $id): \stdClass
     {
         $this->requireScope(Scope::SCOPE_VOTE);
 
-        return $this->putMethod(sprintf('annotations/%s/downvote', $id));
+        return $this->requester->put(sprintf('annotations/%s/downvote', $id));
     }
 
     public function unvote(int $id): \stdClass
     {
         $this->requireScope(Scope::SCOPE_VOTE);
 
-        return $this->putMethod(sprintf('annotations/%s/unvote', $id));
+        return $this->requester->put(sprintf('annotations/%s/unvote', $id));
     }
 }

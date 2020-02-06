@@ -10,7 +10,7 @@ class SongsResource extends AbstractResource
 {
     public function get(int $id, string $text_format = 'dom'): \stdClass
     {
-        return $this->getMethod(
+        return $this->requester->get(
             sprintf('songs/%s', $id),
             ['text_format' => $text_format]
         );

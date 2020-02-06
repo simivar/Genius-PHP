@@ -17,7 +17,7 @@ class ReferentsResource extends AbstractResource
         ?int $page = null
     ): \stdClass
     {
-        return $this->getMethod(
+        return $this->requester->get(
             'referents',
             [
                 'created_by_id' => $created_by_id,

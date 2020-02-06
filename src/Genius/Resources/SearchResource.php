@@ -10,7 +10,7 @@ class SearchResource extends AbstractResource
 {
     public function get(string $query): \stdClass
     {
-        return $this->getMethod(
+        return $this->requester->get(
             'search',
             ['q' => $query]
         );
