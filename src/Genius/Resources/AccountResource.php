@@ -14,6 +14,6 @@ class AccountResource extends AbstractResource
     {
         $this->requireScope(Scope::SCOPE_ME);
         
-        return $this->getMethod('account', ['text_format' => $text_format]);
+        return $this->requester->get('account', ['text_format' => $text_format]);
     }
 }

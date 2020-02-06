@@ -10,7 +10,7 @@ class ArtistsResource extends AbstractResource
 {
     public function get(int $id, string $text_format = 'dom'): \stdClass
     {
-        return $this->getMethod(
+        return $this->requester->get(
             sprintf('artists/%s', $id),
             ['text_format' => $text_format]
         );
@@ -24,7 +24,7 @@ class ArtistsResource extends AbstractResource
             'page' => $page
         ];
 
-        return $this->getMethod(
+        return $this->requester->get(
             sprintf('artists/%s/songs', $id),
             $data
         );

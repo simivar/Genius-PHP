@@ -4,18 +4,14 @@ declare(strict_types=1);
 namespace Genius\Resources;
 
 use Genius\Authentication\OAuth2;
-use Genius\Exception\ApiResponseErrorException;
 use Genius\Genius;
-use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Message\RequestInterface;
-use stdClass;
+use Genius\HttpClient\Requester;
 use Genius\Exception\ResourceException;
 
 class AbstractResource
 {
-    protected const API_URL = 'https://api.genius.com/';
-
-    protected const OK_STATUS_CODE = 200;
+    /** @var Requester */
+    protected $requester;
 
     /** @var Genius */
     protected $genius;
@@ -23,83 +19,7 @@ class AbstractResource
     public function __construct(Genius $genius)
     {
         $this->genius = $genius;
-    }
-
-    public function getMethod(string $uri, array $parameters = [], array $headers = []): stdClass
-    {
-        if (count($parameters) > 0) {
-            $uri .= '/?' . http_build_query($parameters);
-        }
-
-        return $this->sendRequest(
-            'GET',
-            $uri,
-            $headers
-        );
-    }
-
-    public function postMethod(string $uri, array $parameters = [], array $headers = []): stdClass
-    {
-        return $this->sendRequest(
-            'POST',
-            $uri,
-            $headers,
-            json_encode($parameters, JSON_THROW_ON_ERROR)
-        );
-    }
-
-    public function putMethod(string $uri, array $parameters = [], array $headers = []): stdClass
-    {
-        return $this->sendRequest(
-            'PUT',
-            $uri,
-            $headers,
-            json_encode($parameters, JSON_THROW_ON_ERROR)
-        );
-    }
-
-    public function deleteMethod(string $uri, array $parameters = [], array $headers = []): stdClass
-    {
-        return $this->sendRequest(
-            'DELETE',
-            $uri,
-            $headers,
-            json_encode($parameters, JSON_THROW_ON_ERROR)
-        );
-    }
-
-    /**
-     * @param string $method
-     * @param string $uri
-     * @param array $headers
-     * @param null $body
-     * @param string $protocolVersion
-     * @return stdClass
-     * @throws ApiResponseErrorException
-     * @throw \JsonException
-     * @throws ClientExceptionInterface
-     */
-    protected function sendRequest(
-        string $method,
-        string $uri,
-        array $headers = [],
-        $body = null,
-        string $protocolVersion = '1.1'
-    ): stdClass
-    {
-        $req = $this->createRequest($method, $uri, $headers, $body, $protocolVersion);
-
-        $response = $this->genius->getHttpClient()->sendRequest($req);
-        $decodedBody = json_decode($response->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
-        if ($response->getStatusCode() === self::OK_STATUS_CODE) {
-            return $decodedBody->response;
-        }
-
-        if (isset($decodedBody->meta)) {
-            throw new ApiResponseErrorException($decodedBody->meta->message, $response->getStatusCode());
-        }
-
-        throw new ApiResponseErrorException($decodedBody->error_description, $response->getStatusCode());
+        $this->requester = new Requester($genius);
     }
 
     /**
@@ -132,21 +52,5 @@ class AbstractResource
     private function getCallerClassAndFunctionName(): string
     {
         return debug_backtrace()[2]['class'] . '::' . debug_backtrace()[2]['function'];
-    }
-
-    private function createRequest(string $method, string $uri, array $headers = [], ?string $body = null, string $protocolVersion = '1.1'): RequestInterface
-    {
-        $request = $this->genius->getRequestFactory()->createRequest($method, self::API_URL . $uri);
-        $request->withProtocolVersion($protocolVersion);
-
-        if (is_string($body)) {
-            $request->withBody($this->genius->getStreamFactory()->createStream($body));
-        }
-
-        foreach ($headers as $name => $value) {
-            $request->withAddedHeader($name, $value);
-        }
-
-        return $request;
     }
 }
