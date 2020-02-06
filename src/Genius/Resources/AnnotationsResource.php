@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace Genius\Resources;
 
 use Genius\Authentication\Scope;
+use stdClass;
 
 /**
  * @see https://docs.genius.com/#annotations-h2
  */
 class AnnotationsResource extends AbstractResource
 {
-    public function get(int $id, string $text_format = 'dom'): \stdClass
+    public function get(int $id, string $text_format = 'dom'): stdClass
     {
         return $this->requester->get(
             sprintf('annotations/%s', $id),
@@ -18,7 +19,7 @@ class AnnotationsResource extends AbstractResource
         );
     }
 
-    public function post(array $annotation, array $referent, array $web_page): \stdClass
+    public function post(array $annotation, array $referent, array $web_page): stdClass
     {
         $this->requireScope(Scope::SCOPE_CREATE_ANNOTATION);
 
@@ -29,7 +30,7 @@ class AnnotationsResource extends AbstractResource
         ]);
     }
 
-    public function put(int $id, array $annotation, array $referent, array $web_page): \stdClass
+    public function put(int $id, array $annotation, array $referent, array $web_page): stdClass
     {
         $this->requireScope(Scope::SCOPE_MANAGE_ANNOTATION);
 
@@ -43,28 +44,28 @@ class AnnotationsResource extends AbstractResource
         );
     }
 
-    public function delete(int $id): \stdClass
+    public function delete(int $id): stdClass
     {
         $this->requireScope(Scope::SCOPE_MANAGE_ANNOTATION);
 
         return $this->requester->delete(sprintf('annotations/%s', $id));
     }
 
-    public function upvote(int $id): \stdClass
+    public function upvote(int $id): stdClass
     {
         $this->requireScope(Scope::SCOPE_VOTE);
 
         return $this->requester->put(sprintf('annotations/%s/upvote', $id));
     }
 
-    public function downvote(int $id): \stdClass
+    public function downvote(int $id): stdClass
     {
         $this->requireScope(Scope::SCOPE_VOTE);
 
         return $this->requester->put(sprintf('annotations/%s/downvote', $id));
     }
 
-    public function unvote(int $id): \stdClass
+    public function unvote(int $id): stdClass
     {
         $this->requireScope(Scope::SCOPE_VOTE);
 
