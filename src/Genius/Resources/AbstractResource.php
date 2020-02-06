@@ -20,7 +20,6 @@ class AbstractResource
     {
         $this->genius = $genius;
         $this->requester = new Requester($genius->getHttpClient());
-        $this->requester->setGenius($genius);
     }
 
     /**
