@@ -3,42 +3,49 @@
 namespace Genius\HttpClient;
 
 use Genius\Exception\ApiResponseErrorException;
-use Genius\Genius;
-use Psr\Http\Message\RequestInterface;
-use stdClass;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
+use stdClass;
 
-class Requester {
-    protected const API_URL = 'https://api.genius.com/';
-
-    protected const OK_STATUS_CODE = 200;
+class Requester
+{
+    private const OK_STATUS_CODE = 200;
 
     /** @var ClientInterface */
     private $httpClient;
 
-    /** @var Genius */
-    private $genius;
+    /** @var RequestBuilder */
+    private $requestBuilder;
 
     public function __construct(ClientInterface $httpClient)
     {
         $this->httpClient = $httpClient;
     }
 
-    public function setGenius(Genius $genius): void
+    public function setRequestBuilder(RequestBuilder $requestBuilder): void
     {
-        $this->genius = $genius;
+        $this->requestBuilder = $requestBuilder;
+    }
+
+    private function getRequestBuilder(): RequestBuilder
+    {
+        if ($this->requestBuilder === null) {
+            $this->requestBuilder = new RequestBuilder();
+        }
+
+        return $this->requestBuilder;
     }
 
     public function get(string $uri, array $parameters = [], array $headers = []): stdClass
     {
         if (count($parameters) > 0) {
-            $uri .= '/?'.http_build_query($parameters);
+            $uri .= '/?' . http_build_query($parameters);
         }
 
         return $this->sendRequest(
             'GET',
             $uri,
-            $headers,
+            $headers
         );
     }
 
@@ -48,7 +55,7 @@ class Requester {
             'POST',
             $uri,
             $headers,
-            json_encode($parameters, JSON_THROW_ON_ERROR),
+            json_encode($parameters, JSON_THROW_ON_ERROR)
         );
     }
 
@@ -58,7 +65,7 @@ class Requester {
             'PUT',
             $uri,
             $headers,
-            json_encode($parameters, JSON_THROW_ON_ERROR),
+            json_encode($parameters, JSON_THROW_ON_ERROR)
         );
     }
 
@@ -68,7 +75,7 @@ class Requester {
             'DELETE',
             $uri,
             $headers,
-            json_encode($parameters, JSON_THROW_ON_ERROR),
+            json_encode($parameters, JSON_THROW_ON_ERROR)
         );
     }
 
@@ -76,13 +83,25 @@ class Requester {
         string $method,
         string $uri,
         array $headers = [],
-        $body = null
+        ?string $body = null
     ): stdClass
     {
-        $req = $this->createRequest($method, $uri, $headers, $body);
+        $request = $this->getRequestBuilder()->build($method, $uri, $headers, $body);
 
-        $response = $this->httpClient->sendRequest($req);
-        $decodedBody = json_decode($response->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
+        try {
+            $response = $this->httpClient->sendRequest($request);
+            $decodedBody = json_decode(
+                $response->getBody()->getContents(),
+                false,
+                512,
+                JSON_THROW_ON_ERROR
+            );
+        } catch (ClientExceptionInterface $e) {
+            throw new ApiResponseErrorException($e->getMessage(), $e->getCode());
+        } catch (\JsonException $jsonException) {
+            throw $jsonException;
+        }
+
         if ($response->getStatusCode() === self::OK_STATUS_CODE) {
             return $decodedBody->response;
         }
@@ -92,21 +111,5 @@ class Requester {
         }
 
         throw new ApiResponseErrorException($decodedBody->error_description, $response->getStatusCode());
-    }
-
-    private function createRequest(string $method, string $uri, array $headers = [], ?string $body = null, string $protocolVersion = '1.1'): RequestInterface
-    {
-        $request = $this->genius->getRequestFactory()->createRequest($method, self::API_URL . $uri);
-        $request->withProtocolVersion($protocolVersion);
-
-        if (is_string($body)) {
-            $request->withBody($this->genius->getStreamFactory()->createStream($body));
-        }
-
-        foreach ($headers as $name => $value) {
-            $request->withAddedHeader($name, $value);
-        }
-
-        return $request;
     }
 }
