@@ -13,18 +13,6 @@ use Http\Message\Authentication;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-/**
- * Class Genius
- * @package Genius
- *
- * @method Resources\AccountResource getAccountResource()
- * @method Resources\AnnotationsResource getAnnotationsResource()
- * @method Resources\ArtistsResource getArtistsResource()
- * @method Resources\ReferentsResource getReferentsResource()
- * @method Resources\SearchResource getSearchResource()
- * @method Resources\SongsResource getSongsResource()
- * @method Resources\WebPagesResource getWebPagesResource()
- */
 class Genius
 {
     /** @var RequestFactoryInterface */
@@ -82,24 +70,39 @@ class Genius
     {
         return Psr17FactoryDiscovery::findStreamFactory();
     }
-    
-    public function __call($name, $arguments)
+
+    public function getAccountResource(): Resources\AccountResource
     {
-        if (strpos($name, 'get') !== 0) {
-            return false;
-        }
-        
-        $name = '\\Genius\\Resources\\' . substr($name, 3);
-        if (!class_exists($name)) {
-            return false;
-        }
-        
-        if (isset($this->resourceObjects[ $name ])) {
-            return $this->resourceObjects[ $name ];
-        }
-        
-        $this->resourceObjects[ $name ] = new $name($this);
-        
-        return $this->resourceObjects[ $name ];
+        return new Resources\AccountResource($this);
+    }
+
+    public function getAnnotationsResource(): Resources\AnnotationsResource
+    {
+        return new Resources\AnnotationsResource($this);
+    }
+
+    public function getArtistsResource(): Resources\ArtistsResource
+    {
+        return new Resources\ArtistsResource($this);
+    }
+
+    public function getReferentsResource(): Resources\ReferentsResource
+    {
+        return new Resources\ReferentsResource($this);
+    }
+
+    public function getSearchResource(): Resources\SearchResource
+    {
+        return new Resources\SearchResource($this);
+    }
+
+    public function getSongsResource(): Resources\SongsResource
+    {
+        return new Resources\SongsResource($this);
+    }
+
+    public function getWebPagesResource(): Resources\WebPagesResource
+    {
+        return new Resources\WebPagesResource($this);
     }
 }
