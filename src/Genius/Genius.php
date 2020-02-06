@@ -5,6 +5,7 @@ namespace Genius;
 
 use Genius\Authentication\OAuth2;
 use Genius\Exception\ConnectGeniusException;
+use Genius\HttpClient\Requester;
 use Genius\Resources;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpClient;
@@ -23,9 +24,6 @@ class Genius
     
     /** @var Authentication|OAuth2 */
     protected $authentication;
-    
-    /** @var array All created resource objects */
-    protected $resourceObjects = [];
     
     /**
      * ClientGenius constructor.
@@ -73,36 +71,36 @@ class Genius
 
     public function getAccountResource(): Resources\AccountResource
     {
-        return new Resources\AccountResource($this);
+        return new Resources\AccountResource(new Requester($this->getHttpClient()));
     }
 
     public function getAnnotationsResource(): Resources\AnnotationsResource
     {
-        return new Resources\AnnotationsResource($this);
+        return new Resources\AnnotationsResource(new Requester($this->getHttpClient()));
     }
 
     public function getArtistsResource(): Resources\ArtistsResource
     {
-        return new Resources\ArtistsResource($this);
+        return new Resources\ArtistsResource(new Requester($this->getHttpClient()));
     }
 
     public function getReferentsResource(): Resources\ReferentsResource
     {
-        return new Resources\ReferentsResource($this);
+        return new Resources\ReferentsResource(new Requester($this->getHttpClient()));
     }
 
     public function getSearchResource(): Resources\SearchResource
     {
-        return new Resources\SearchResource($this);
+        return new Resources\SearchResource(new Requester($this->getHttpClient()));
     }
 
     public function getSongsResource(): Resources\SongsResource
     {
-        return new Resources\SongsResource($this);
+        return new Resources\SongsResource(new Requester($this->getHttpClient()));
     }
 
     public function getWebPagesResource(): Resources\WebPagesResource
     {
-        return new Resources\WebPagesResource($this);
+        return new Resources\WebPagesResource(new Requester($this->getHttpClient()));
     }
 }
