@@ -19,7 +19,8 @@ class AbstractResource
     public function __construct(Genius $genius)
     {
         $this->genius = $genius;
-        $this->requester = new Requester($genius);
+        $this->requester = new Requester($genius->getHttpClient());
+        $this->requester->setGenius($genius);
     }
 
     /**
