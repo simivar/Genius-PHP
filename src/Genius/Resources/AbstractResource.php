@@ -19,10 +19,53 @@ class AbstractResource
 
     /** @var Genius */
     protected $genius;
-    
+
     public function __construct(Genius $genius)
     {
         $this->genius = $genius;
+    }
+
+    public function getMethod(string $uri, array $parameters = [], array $headers = []): stdClass
+    {
+        if (count($parameters) > 0) {
+            $uri .= '/?' . http_build_query($parameters);
+        }
+
+        return $this->sendRequest(
+            'GET',
+            $uri,
+            $headers
+        );
+    }
+
+    public function postMethod(string $uri, array $parameters = [], array $headers = []): stdClass
+    {
+        return $this->sendRequest(
+            'POST',
+            $uri,
+            $headers,
+            json_encode($parameters, JSON_THROW_ON_ERROR)
+        );
+    }
+
+    public function putMethod(string $uri, array $parameters = [], array $headers = []): stdClass
+    {
+        return $this->sendRequest(
+            'PUT',
+            $uri,
+            $headers,
+            json_encode($parameters, JSON_THROW_ON_ERROR)
+        );
+    }
+
+    public function deleteMethod(string $uri, array $parameters = [], array $headers = []): stdClass
+    {
+        return $this->sendRequest(
+            'DELETE',
+            $uri,
+            $headers,
+            json_encode($parameters, JSON_THROW_ON_ERROR)
+        );
     }
 
     /**
@@ -42,8 +85,9 @@ class AbstractResource
         array $headers = [],
         $body = null,
         string $protocolVersion = '1.1'
-    ): stdClass {
-        $req =  $this->createRequest($method, $uri, $headers, $body, $protocolVersion);
+    ): stdClass
+    {
+        $req = $this->createRequest($method, $uri, $headers, $body, $protocolVersion);
 
         $response = $this->genius->getHttpClient()->sendRequest($req);
         $decodedBody = json_decode($response->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
@@ -77,7 +121,7 @@ class AbstractResource
         if ($scopes->hasScope($scope)) {
             return true;
         }
-        
+
         throw new ResourceException(sprintf(
             'You have no access to required scope "%s" for "%s" action.',
             $scope,
@@ -92,7 +136,7 @@ class AbstractResource
 
     private function createRequest(string $method, string $uri, array $headers = [], ?string $body = null, string $protocolVersion = '1.1'): RequestInterface
     {
-        $request =  $this->genius->getRequestFactory()->createRequest($method, self::API_URL . $uri);
+        $request = $this->genius->getRequestFactory()->createRequest($method, self::API_URL . $uri);
         $request->withProtocolVersion($protocolVersion);
 
         if (is_string($body)) {
