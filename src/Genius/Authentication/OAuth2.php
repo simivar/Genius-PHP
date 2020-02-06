@@ -17,47 +17,47 @@ use Psr\Http\Message\RequestInterface;
 final class OAuth2 implements Authentication
 {
     protected const API_URL = 'https://api.genius.com/oauth/';
-    
+
     /**
      * @var string
      */
     private $clientSecret;
-    
+
     /**
      * @var string
      */
     private $clientId;
-    
+
     /**
      * @var string
      */
     protected $state;
-    
+
     /**
      * @var string
      */
     private $accessToken;
-    
+
     /**
      * @var Scope
      */
     private $scope;
-    
+
     /**
      * @var HttpClient
      */
     private $httpClient;
-    
+
     /**
      * @var MessageFactory
      */
     private $messageFactory;
-    
+
     /**
      * @var string
      */
     private $redirectUri;
-    
+
     /**
      * @param string $client_id
      * @param string $client_secret
@@ -70,7 +70,7 @@ final class OAuth2 implements Authentication
         $this->clientId = $client_id;
         $this->clientSecret = $client_secret;
         $this->redirectUri = $redirect_uri;
-        
+
         if ($httpClient === null) {
             $this->getHttpClient();
         } else {
@@ -78,20 +78,19 @@ final class OAuth2 implements Authentication
         }
         $this->messageFactory = MessageFactoryDiscovery::find();
         $this->setScope($scope);
-        $this->setState($this->getRandomState());
     }
 
     public function setScope(Scope $scope): OAuth2
     {
         $this->scope = $scope;
-        
+
         return $this;
     }
 
     public function setClientId(string $clientId): OAuth2
     {
         $this->clientId = $clientId;
-        
+
         return $this;
     }
 
@@ -105,21 +104,21 @@ final class OAuth2 implements Authentication
     public function setRedirectUri(string $redirect_uri): OAuth2
     {
         $this->redirectUri = $redirect_uri;
-        
+
         return $this;
     }
 
     public function setMessageFactory(MessageFactory $messageFactory): OAuth2
     {
         $this->messageFactory = $messageFactory;
-        
+
         return $this;
     }
 
     public function setState(string $state): OAuth2
     {
         $this->state = $state;
-        
+
         return $this;
     }
 
@@ -128,7 +127,7 @@ final class OAuth2 implements Authentication
         if ($this->hasValidAccessToken()) {
             return $this->accessToken;
         }
-        
+
         $this->accessToken = null;
         return null;
     }
@@ -138,19 +137,23 @@ final class OAuth2 implements Authentication
         if ($this->httpClient === null) {
             $this->httpClient = HttpClientDiscovery::find();
         }
-        
+
         return $this->httpClient;
     }
 
     public function getAuthUrl(): string
     {
         return self::API_URL . 'authorize?client_id=' . $this->clientId .
-            '&redirect_uri=' . $this->redirectUri . '&scope=' . $this->scope . '&state=' . 'randstate' .
+            '&redirect_uri=' . $this->redirectUri . '&scope=' . $this->scope . '&state=' . $this->getState() .
             '&response_type=code';
     }
 
     public function getState(): string
     {
+        if ($this->state === null) {
+            $this->state = $this->getRandomState();
+        }
+
         return $this->state;
     }
 
@@ -158,18 +161,18 @@ final class OAuth2 implements Authentication
     {
         return $this->scope;
     }
-    
+
     public function hasValidAccessToken(): bool
     {
         return $this->accessToken !== null;
     }
-    
+
     public function refreshToken(string $code): ?string
     {
         if ($this->getAccessToken()) {
             return $this->getAccessToken();
         }
-        
+
         $request = $this->httpClient->sendRequest(
             $this->messageFactory->createRequest(
                 'POST',
@@ -185,7 +188,7 @@ final class OAuth2 implements Authentication
                 ])
             )
         );
-        
+
         if ($request->getStatusCode() === 200) {
             $body = json_decode($request->getBody()->getContents(), false);
 
@@ -202,7 +205,7 @@ final class OAuth2 implements Authentication
         // the amount of bytes by half to produce the correct length.
         return bin2hex(random_bytes($length / 2));
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -210,10 +213,10 @@ final class OAuth2 implements Authentication
     {
         if ($this->hasValidAccessToken()) {
             $header = sprintf('Bearer %s', $this->accessToken);
-            
+
             return $request->withHeader('Authorization', $header);
         }
-        
+
         return $request;
     }
 }
