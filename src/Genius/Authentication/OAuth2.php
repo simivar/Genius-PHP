@@ -34,9 +34,9 @@ final class OAuth2 implements Authentication
         $this->scope = $scope;
     }
 
-    public function setAccessToken(string $access_token): OAuth2
+    public function setAccessToken(string $accessToken): OAuth2
     {
-        $this->accessToken = $access_token;
+        $this->accessToken = $accessToken;
 
         return $this;
     }
@@ -44,13 +44,6 @@ final class OAuth2 implements Authentication
     public function setMessageFactory(MessageFactory $messageFactory): OAuth2
     {
         $this->messageFactory = $messageFactory;
-
-        return $this;
-    }
-
-    public function setState(string $state): OAuth2
-    {
-        $this->state = $state;
 
         return $this;
     }
@@ -64,11 +57,18 @@ final class OAuth2 implements Authentication
         return $this->httpClient;
     }
 
-    public function getAuthUrl(): string
+    public function getAuthorizeUrl(): string
     {
         return self::API_URL . 'authorize?client_id=' . $this->clientId .
             '&redirect_uri=' . $this->redirectUri . '&scope=' . $this->scope . '&state=' . $this->getState() .
             '&response_type=code';
+    }
+
+    public function setState(string $state): OAuth2
+    {
+        $this->state = $state;
+
+        return $this;
     }
 
     public function getState(): string
