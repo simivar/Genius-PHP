@@ -31,14 +31,7 @@ final class OAuth2 implements Authentication
         $this->redirectUri = $redirectUri;
         $this->httpClient = $httpClient;
         $this->messageFactory = MessageFactoryDiscovery::find();
-        $this->setScope($scope);
-    }
-
-    public function setScope(Scope $scope): OAuth2
-    {
         $this->scope = $scope;
-
-        return $this;
     }
 
     public function setAccessToken(string $access_token): OAuth2

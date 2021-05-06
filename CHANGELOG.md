@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Removed
 
 - Support for PHP lower than 7.4
-- Public methods `OAuth2::hasValidAccessToken()`, `OAuth2::getAccessToken()`, `OAuth2::setRedirectUri()`, `OAuth2::setClientId()`
+- Public methods `OAuth2::hasValidAccessToken()`, `OAuth2::getAccessToken()`, `OAuth2::setRedirectUri()`, `OAuth2::setClientId()`, `OAuth2::setScope()`
 
 ## [2.0.0] - 2019-12-27
 
