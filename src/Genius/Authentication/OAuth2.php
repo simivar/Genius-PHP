@@ -24,11 +24,11 @@ final class OAuth2 implements Authentication
     private MessageFactory $messageFactory;
     private string $redirectUri;
 
-    public function __construct(string $client_id, string $client_secret, string $redirect_uri, Scope $scope, ?HttpClient $httpClient = null)
+    public function __construct(string $clientId, string $clientSecret, string $redirectUri, Scope $scope, ?HttpClient $httpClient = null)
     {
-        $this->clientId = $client_id;
-        $this->clientSecret = $client_secret;
-        $this->redirectUri = $redirect_uri;
+        $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
+        $this->redirectUri = $redirectUri;
 
         if (!isset($httpClient)) {
             $this->getHttpClient();
