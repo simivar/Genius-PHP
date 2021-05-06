@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed
 
-- Support for PHP <7.3
+- Support for PHP lower than 7.4
 
 ## [2.0.0] - 2019-12-27
 

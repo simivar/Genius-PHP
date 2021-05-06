@@ -1,33 +1,46 @@
 {
-  "name": "simivar/genius-php",
-  "description": "Genius PHP is a open source library that allows you to access Genius API from your PHP application. Supports every resource.",
-  "keywords": ["genius", "rapgenius", "api", "psr-4", "httplug"],
-  "homepage": "https://github.com/simivar/Genius-PHP",
-  "type": "library",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "simivar",
-      "email": "simivar@gmail.com",
-      "homepage": "https://github.com/simivar/Genius-PHP"
+    "name": "simivar/genius-php",
+    "description": "Genius PHP is a open source library that allows you to access Genius API from your PHP application. Supports every resource.",
+    "keywords": [
+        "genius",
+        "rapgenius",
+        "api",
+        "psr-4",
+        "httplug"
+    ],
+    "homepage": "https://github.com/simivar/Genius-PHP",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "simivar",
+            "email": "simivar@gmail.com",
+            "homepage": "https://github.com/simivar/Genius-PHP"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "psr/http-message": "^1.0",
+        "psr/http-client-implementation": "^1.0",
+        "php-http/httplug": "^1.0 || ^2.0",
+        "php-http/client-common": "^1.0 || ^2.0",
+        "php-http/message-factory": "^1.0",
+        "php-http/discovery": "^1.0",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5",
+        "symfony/http-client": "^5.2",
+        "nyholm/psr7": "^1.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Genius\\": "src/Genius"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Genius\\": "tests"
+        }
     }
-  ],
-  "require": {
-    "php": "^7.3 || ^8.0",
-    "php-http/httplug": "^1.0 || ^2.0",
-    "php-http/message": "^1.0",
-    "php-http/client-common": "^1.0 || ^2.0",
-    "php-http/discovery": "^1.0",
-    "ext-json": "*"
-  },
-  "require-dev": {
-    "php-http/guzzle6-adapter": "^2.0",
-    "phpunit/phpunit" : "^8.5"
-  },
-  "autoload": {
-    "psr-4": {"Genius\\": "src/Genius"}
-  },
-  "autoload-dev": {
-    "psr-4": {"Genius\\": "tests"}
-  }
 }
