@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Genius;
 
 use Genius\Authentication\OAuth2;
 use Genius\HttpClient\ClientConfiguration;
+use Genius\HttpClient\RequestBuilder;
 use Genius\HttpClient\Requester;
-use Genius\Resources;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpClient;
 use Http\Message\Authentication;
@@ -42,8 +43,8 @@ class Genius
 
     private function getRequester(): Requester
     {
-        if ($this->requester === null) {
-            $this->requester = new Requester($this->getClient());
+        if (null === $this->requester) {
+            $this->requester = new Requester($this->getClient(), new RequestBuilder());
         }
 
         return $this->requester;
@@ -51,11 +52,11 @@ class Genius
 
     protected function getClient(): PluginClient
     {
-        if ($this->clientConfiguration === null) {
+        if (null === $this->clientConfiguration) {
             $this->clientConfiguration = new ClientConfiguration($this->authentication);
         }
 
-        if ($this->httpClient === null) {
+        if (null === $this->httpClient) {
             $this->httpClient = $this->clientConfiguration->createClient();
         }
 

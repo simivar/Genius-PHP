@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Genius\Authentication;
@@ -16,14 +17,14 @@ class Scope
 
     public function __construct(array $scopes = [])
     {
-        foreach($scopes as $scope){
+        foreach ($scopes as $scope) {
             $this->addScope($scope);
         }
     }
 
     public function addScope(string $scope): self
     {
-        if($this->isValidScope($scope)){
+        if ($this->isValidScope($scope)) {
             $this->scope[$scope] = $scope;
         }
 
@@ -32,7 +33,7 @@ class Scope
 
     public function removeScope(string $scope): self
     {
-        if($this->isValidScope($scope) && $this->hasScope($scope)){
+        if ($this->isValidScope($scope) && $this->hasScope($scope)) {
             unset($this->scope[$scope]);
         }
 
@@ -41,7 +42,7 @@ class Scope
 
     public function isValidScope(string $scope): bool
     {
-        if(in_array($scope, self::getAvailableScopes(), true)){
+        if (in_array($scope, self::getAvailableScopes(), true)) {
             return true;
         }
 
@@ -50,7 +51,7 @@ class Scope
 
     public function hasScope(string $scope): bool
     {
-        if(in_array($scope, $this->scope, true)){
+        if (in_array($scope, $this->scope, true)) {
             return true;
         }
 

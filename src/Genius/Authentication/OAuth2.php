@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Genius\Authentication;
@@ -12,11 +13,11 @@ use Psr\Http\Message\RequestInterface;
 
 final class OAuth2 implements Authentication
 {
-    protected const API_URL = 'https://api.genius.com/oauth/';
+    private const API_URL = 'https://api.genius.com/oauth/';
 
     private string $clientSecret;
     private string $clientId;
-    protected string $state;
+    private string $state;
     private ?string $accessToken;
     private Scope $scope;
     private HttpClient $httpClient;
@@ -87,10 +88,11 @@ final class OAuth2 implements Authentication
         }
 
         $this->accessToken = null;
+
         return null;
     }
 
-    protected function getHttpClient(): HttpClient
+    private function getHttpClient(): HttpClient
     {
         if (!isset($this->httpClient)) {
             $this->httpClient = HttpClientDiscovery::find();
@@ -108,7 +110,7 @@ final class OAuth2 implements Authentication
 
     public function getState(): string
     {
-        if ($this->state === null) {
+        if (null === $this->state) {
             $this->state = $this->getRandomState();
         }
 
@@ -122,7 +124,7 @@ final class OAuth2 implements Authentication
 
     public function hasValidAccessToken(): bool
     {
-        return $this->accessToken !== null;
+        return null !== $this->accessToken;
     }
 
     public function refreshToken(string $code): ?string
@@ -147,17 +149,18 @@ final class OAuth2 implements Authentication
             )
         );
 
-        if ($request->getStatusCode() === 200) {
+        if (200 === $request->getStatusCode()) {
             $body = json_decode($request->getBody()->getContents(), false);
 
             $this->accessToken = $body->access_token;
+
             return $this->accessToken;
         }
 
         return null;
     }
 
-    protected function getRandomState(int $length = 32): string
+    private function getRandomState(int $length = 32): string
     {
         // Converting bytes to hex will always double length. Hence, we can reduce
         // the amount of bytes by half to produce the correct length.

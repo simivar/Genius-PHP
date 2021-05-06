@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Genius\Resources;
@@ -17,13 +18,13 @@ final class ArtistsResource extends AbstractResource
             ['text_format' => $text_format]
         );
     }
-    
+
     public function getSongs(int $id, string $sort = 'title', ?int $per_page = null, ?int $page = null): stdClass
     {
         $data = [
             'sort' => $sort,
             'per_page' => $per_page,
-            'page' => $page
+            'page' => $page,
         ];
 
         return $this->requester->get(

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Genius\HttpClient;
 
 use Http\Client\Common\Plugin\AddHostPlugin;
@@ -13,7 +15,8 @@ use Http\Message\Authentication;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\UriFactoryInterface;
 
-final class ClientConfiguration {
+final class ClientConfiguration
+{
     private string $endpoint = 'https://api.genius.com/';
     private Authentication $authentication;
     private ClientInterface $httpClient;

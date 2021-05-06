@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Genius\HttpClient;
@@ -16,7 +17,7 @@ final class RequestBuilder implements RequestBuilderInterface
     public function build(string $method, string $uri, array $headers = [], ?string $body = null): RequestInterface
     {
         $request = $this->getRequestFactory()->createRequest($method, $uri);
-        if ($body !== null) {
+        if (null !== $body) {
             $request->withBody($this->getStreamFactory()->createStream($body));
         }
 

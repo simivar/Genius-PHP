@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Genius\HttpClient;
 
 use Genius\Exception\ApiResponseErrorException;
@@ -69,8 +71,7 @@ final class Requester implements RequesterInterface
         string $uri,
         array $headers = [],
         ?string $body = null
-    ): stdClass
-    {
+    ): stdClass {
         $request = $this->requestBuilder->build($method, $uri, $headers, $body);
 
         try {
@@ -87,7 +88,7 @@ final class Requester implements RequesterInterface
             throw $jsonException;
         }
 
-        if ($response->getStatusCode() === self::OK_STATUS_CODE) {
+        if (self::OK_STATUS_CODE === $response->getStatusCode()) {
             return $decodedBody->response;
         }
 
