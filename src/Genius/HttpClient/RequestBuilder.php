@@ -8,15 +8,15 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-class RequestBuilder
+final class RequestBuilder implements RequestBuilderInterface
 {
     private RequestFactoryInterface $requestFactory;
     private StreamFactoryInterface $streamFactory;
 
-    public function build(string $method, string $uri, array $headers = [], $body = null): RequestInterface
+    public function build(string $method, string $uri, array $headers = [], ?string $body = null): RequestInterface
     {
         $request = $this->getRequestFactory()->createRequest($method, $uri);
-        if (is_string($body)) {
+        if ($body !== null) {
             $request->withBody($this->getStreamFactory()->createStream($body));
         }
 
@@ -46,7 +46,7 @@ class RequestBuilder
         $this->streamFactory = $streamFactory;
     }
 
-    public function getStreamFactory(): StreamFactoryInterface
+    private function getStreamFactory(): StreamFactoryInterface
     {
         if (!isset($this->streamFactory)) {
             $this->streamFactory = Psr17FactoryDiscovery::findStreamFactory();
