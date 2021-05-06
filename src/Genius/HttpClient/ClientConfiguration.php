@@ -15,7 +15,7 @@ use Http\Message\Authentication;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\UriFactoryInterface;
 
-final class ClientConfiguration
+final class ClientConfiguration implements ClientConfigurationInterface
 {
     private string $endpoint = 'https://api.genius.com/';
     private Authentication $authentication;

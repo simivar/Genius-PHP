@@ -4,44 +4,38 @@ declare(strict_types=1);
 
 namespace Genius;
 
-use Genius\Authentication\OAuth2;
 use Genius\HttpClient\ClientConfiguration;
+use Genius\HttpClient\ClientConfigurationInterface;
 use Genius\HttpClient\RequestBuilder;
 use Genius\HttpClient\Requester;
+use Genius\HttpClient\RequesterInterface;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpClient;
 use Http\Message\Authentication;
 
 class Genius
 {
-    /** @var Authentication|OAuth2 */
-    protected $authentication;
-
-    /** @var ClientConfiguration */
-    protected $clientConfiguration;
-
-    /** @var Requester */
-    protected $requester;
-
-    /** @var HttpClient */
-    protected $httpClient;
+    protected Authentication $authentication;
+    protected ClientConfigurationInterface $clientConfiguration;
+    protected RequesterInterface $requester;
+    protected HttpClient $httpClient;
 
     public function __construct(Authentication $authentication)
     {
         $this->authentication = $authentication;
     }
 
-    public function setClientConfiguration(ClientConfiguration $clientConfiguration): void
+    public function setClientConfiguration(ClientConfigurationInterface $clientConfiguration): void
     {
         $this->clientConfiguration = $clientConfiguration;
     }
 
-    public function setRequester(Requester $requester): void
+    public function setRequester(RequesterInterface $requester): void
     {
         $this->requester = $requester;
     }
 
-    private function getRequester(): Requester
+    private function getRequester(): RequesterInterface
     {
         if (null === $this->requester) {
             $this->requester = new Requester($this->getClient(), new RequestBuilder());
@@ -50,17 +44,22 @@ class Genius
         return $this->requester;
     }
 
-    protected function getClient(): PluginClient
+    private function getClient(): PluginClient
     {
-        if (null === $this->clientConfiguration) {
-            $this->clientConfiguration = new ClientConfiguration($this->authentication);
-        }
-
         if (null === $this->httpClient) {
-            $this->httpClient = $this->clientConfiguration->createClient();
+            $this->httpClient = $this->getClientConfiguration()->createClient();
         }
 
         return $this->httpClient;
+    }
+
+    private function getClientConfiguration(): ClientConfigurationInterface
+    {
+        if (!isset($this->clientConfiguration)) {
+            $this->clientConfiguration = new ClientConfiguration($this->authentication);
+        }
+
+        return $this->clientConfiguration;
     }
 
     public function getAccountResource(): Resources\AccountResource
