@@ -9,10 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Introduced `Genius\Exception\ApiResponseErrorException`
-- Type-hints to all classes properties
+- PHP-CS-Fixer with PSR12 configuration
 
 ### Changed
 
+- All classes properties now have type-hints
 - Object returned by and Exceptions thrown by `Genius\Resources\AbstractResource::sendRequest` changed
   now on `success` it returns data from `result` object preperty
   and on `error` it throws `Genius\Exception\ApiResponseErrorException`. 
