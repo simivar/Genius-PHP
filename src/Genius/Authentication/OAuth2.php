@@ -10,68 +10,26 @@ use Http\Message\Authentication;
 use Http\Message\MessageFactory;
 use Psr\Http\Message\RequestInterface;
 
-/**
- * Class OAuth2. OAuth2 implementation using HTTP.io.
- * @package Genius\Authentication
- */
 final class OAuth2 implements Authentication
 {
     protected const API_URL = 'https://api.genius.com/oauth/';
 
-    /**
-     * @var string
-     */
-    private $clientSecret;
+    private string $clientSecret;
+    private string $clientId;
+    protected string $state;
+    private ?string $accessToken;
+    private Scope $scope;
+    private HttpClient $httpClient;
+    private MessageFactory $messageFactory;
+    private string $redirectUri;
 
-    /**
-     * @var string
-     */
-    private $clientId;
-
-    /**
-     * @var string
-     */
-    protected $state;
-
-    /**
-     * @var string
-     */
-    private $accessToken;
-
-    /**
-     * @var Scope
-     */
-    private $scope;
-
-    /**
-     * @var HttpClient
-     */
-    private $httpClient;
-
-    /**
-     * @var MessageFactory
-     */
-    private $messageFactory;
-
-    /**
-     * @var string
-     */
-    private $redirectUri;
-
-    /**
-     * @param string $client_id
-     * @param string $client_secret
-     * @param string $redirect_uri
-     * @param Scope $scope
-     * @param HttpClient $httpClient
-     */
     public function __construct(string $client_id, string $client_secret, string $redirect_uri, Scope $scope, ?HttpClient $httpClient = null)
     {
         $this->clientId = $client_id;
         $this->clientSecret = $client_secret;
         $this->redirectUri = $redirect_uri;
 
-        if ($httpClient === null) {
+        if (!isset($httpClient)) {
             $this->getHttpClient();
         } else {
             $this->httpClient = $httpClient;
@@ -134,7 +92,7 @@ final class OAuth2 implements Authentication
 
     protected function getHttpClient(): HttpClient
     {
-        if ($this->httpClient === null) {
+        if (!isset($this->httpClient)) {
             $this->httpClient = HttpClientDiscovery::find();
         }
 

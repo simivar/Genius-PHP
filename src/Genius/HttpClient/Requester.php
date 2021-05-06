@@ -3,6 +3,7 @@
 namespace Genius\HttpClient;
 
 use Genius\Exception\ApiResponseErrorException;
+use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use stdClass;
@@ -11,11 +12,8 @@ class Requester
 {
     private const OK_STATUS_CODE = 200;
 
-    /** @var ClientInterface */
-    private $httpClient;
-
-    /** @var RequestBuilder */
-    private $requestBuilder;
+    private ClientInterface $httpClient;
+    private RequestBuilder $requestBuilder;
 
     public function __construct(ClientInterface $httpClient)
     {
@@ -29,7 +27,7 @@ class Requester
 
     private function getRequestBuilder(): RequestBuilder
     {
-        if ($this->requestBuilder === null) {
+        if (!isset($this->requestBuilder)) {
             $this->requestBuilder = new RequestBuilder();
         }
 
@@ -98,7 +96,7 @@ class Requester
             );
         } catch (ClientExceptionInterface $e) {
             throw new ApiResponseErrorException($e->getMessage(), $e->getCode());
-        } catch (\JsonException $jsonException) {
+        } catch (JsonException $jsonException) {
             throw $jsonException;
         }
 

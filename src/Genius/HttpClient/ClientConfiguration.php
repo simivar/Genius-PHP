@@ -10,20 +10,14 @@ use Http\Client\Common\PluginClientFactory;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
 use Http\Message\Authentication;
-use Http\Client\HttpClient;
+use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\UriFactoryInterface;
 
-class ClientConfiguration {
-    protected $endpoint = 'https://api.genius.com/';
-
-    /** @var Authentication */
-    protected $authentication;
-
-    /** @var HttpClient */
-    protected $httpClient;
-
-    /** @var UriFactoryInterface */
-    protected $uriFactory;
+final class ClientConfiguration {
+    private string $endpoint = 'https://api.genius.com/';
+    private Authentication $authentication;
+    private ClientInterface $httpClient;
+    private UriFactoryInterface $uriFactory;
 
     public function __construct(Authentication $authentication)
     {
@@ -35,14 +29,14 @@ class ClientConfiguration {
         return (new PluginClientFactory())->createClient($this->getHttpClient(), $this->getPlugins());
     }
 
-    public function setHttpClient(HttpClient $httpClient): void
+    public function setHttpClient(ClientInterface $httpClient): void
     {
         $this->httpClient = $httpClient;
     }
 
-    private function getHttpClient(): HttpClient
+    private function getHttpClient(): ClientInterface
     {
-        if ($this->httpClient === null) {
+        if (!isset($this->httpClient)) {
             $this->httpClient = Psr18ClientDiscovery::find();
         }
 
@@ -56,8 +50,8 @@ class ClientConfiguration {
 
     private function getUriFactory(): UriFactoryInterface
     {
-        if ($this->uriFactory === null) {
-            $this->uriFactory = Psr17FactoryDiscovery::findUrlFactory();
+        if (!isset($this->uriFactory)) {
+            $this->uriFactory = Psr17FactoryDiscovery::findUriFactory();
         }
 
         return $this->uriFactory;

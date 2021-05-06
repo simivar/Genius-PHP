@@ -7,8 +7,7 @@ use Genius\HttpClient\Requester;
 
 class AbstractResource
 {
-    /** @var Requester */
-    protected $requester;
+    protected Requester $requester;
 
     public function __construct(Requester $requester)
     {

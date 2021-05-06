@@ -3,11 +3,6 @@ declare(strict_types=1);
 
 namespace Genius\Authentication;
 
-/**
- * Class Scope thanks to which we know what scope request from API.
- *
- * @package Genius\Authentication
- */
 class Scope
 {
     public const SCOPE_ME = 'me';
@@ -17,28 +12,15 @@ class Scope
 
     protected const SCOPE_SEPARATOR = ' ';
 
-    /**
-     * @var array
-     */
-    private $scope = [];
-    
-    /**
-     * Scope constructor.
-     *
-     * @param array $scopes
-     */
+    private array $scope = [];
+
     public function __construct(array $scopes = [])
     {
         foreach($scopes as $scope){
             $this->addScope($scope);
         }
     }
-    
-    /**
-     * Adds scope.
-     * @param string $scope
-     * @return $this
-     */
+
     public function addScope(string $scope): self
     {
         if($this->isValidScope($scope)){
@@ -47,12 +29,7 @@ class Scope
 
         return $this;
     }
-    
-    /**
-     * Removes already set scope.
-     * @param string $scope
-     * @return $this
-     */
+
     public function removeScope(string $scope): self
     {
         if($this->isValidScope($scope) && $this->hasScope($scope)){
@@ -62,11 +39,6 @@ class Scope
         return $this;
     }
 
-    /**
-     * Checks if scope is valid.
-     * @param string $scope
-     * @return bool
-     */
     public function isValidScope(string $scope): bool
     {
         if(in_array($scope, self::getAvailableScopes(), true)){
@@ -75,12 +47,7 @@ class Scope
 
         return false;
     }
-    
-    /**
-     * Checks if scope was already set.
-     * @param string $scope
-     * @return bool
-     */
+
     public function hasScope(string $scope): bool
     {
         if(in_array($scope, $this->scope, true)){
@@ -90,9 +57,6 @@ class Scope
         return false;
     }
 
-    /**
-     * @return array All Genius API available scopes.
-     */
     public static function getAvailableScopes(): array
     {
         return [

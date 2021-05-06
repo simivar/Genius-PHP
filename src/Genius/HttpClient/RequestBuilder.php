@@ -10,11 +10,8 @@ use Psr\Http\Message\StreamFactoryInterface;
 
 class RequestBuilder
 {
-    /** @var RequestFactoryInterface */
-    private $requestFactory;
-
-    /** @var StreamFactoryInterface */
-    private $streamFactory;
+    private RequestFactoryInterface $requestFactory;
+    private StreamFactoryInterface $streamFactory;
 
     public function build(string $method, string $uri, array $headers = [], $body = null): RequestInterface
     {
@@ -37,7 +34,7 @@ class RequestBuilder
 
     private function getRequestFactory(): RequestFactoryInterface
     {
-        if ($this->requestFactory === null) {
+        if (!isset($this->requestFactory)) {
             $this->requestFactory = Psr17FactoryDiscovery::findRequestFactory();
         }
 
@@ -51,7 +48,7 @@ class RequestBuilder
 
     public function getStreamFactory(): StreamFactoryInterface
     {
-        if ($this->streamFactory === null) {
+        if (!isset($this->streamFactory)) {
             $this->streamFactory = Psr17FactoryDiscovery::findStreamFactory();
         }
 
