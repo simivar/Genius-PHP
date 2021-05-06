@@ -19,6 +19,7 @@ return (new PhpCsFixer\Config())
         'list_syntax' => ['syntax' => 'short'],
         'linebreak_after_opening_tag' => true,
         'multiline_whitespace_before_semicolons' => ['strategy' => 'new_line_for_chained_calls'],
+        'phpdoc_align' => ['align' => 'left'],
     ])
     ->setCacheFile(__DIR__ . '/.php_cs.cache')
     ->setFinder($finder);
