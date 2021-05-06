@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Introduced `Genius\Exception\ApiResponseErrorException`
 - PHP-CS-Fixer with PSR12 configuration
+- Enum `Genius\Enum\Scope` 
 
 ### Changed
 
@@ -30,11 +31,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Moved `Genius\Resources\ResourceException` to `Genius\Exception\ResourceException`
 - Marked all `*Resource` classes as `final`
 - Renamed `OAuth2::getAuthUrl()` to `OAuth2::getAuthorizeUrl()`
+- Renamed `Scope` to `ScopeList`
 
 ### Removed
 
 - Support for PHP lower than 7.4
 - Public methods `OAuth2::hasValidAccessToken()`, `OAuth2::getAccessToken()`, `OAuth2::setRedirectUri()`, `OAuth2::setClientId()`, `OAuth2::setScope()`
+- Scope constants from `ScopeList` class, use `Genius\Enum\Scope` instead
 
 ## [2.0.0] - 2019-12-27
 

@@ -66,6 +66,7 @@ final class Requester implements RequesterInterface
 
     /**
      * @param array<string, string> $headers
+     *
      * @throws ApiResponseErrorException
      * @throws JsonException
      */

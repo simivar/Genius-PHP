@@ -20,11 +20,11 @@ $authentication = new \Genius\Authentication\OAuth2(
   'YOUR_CLIENT_ID',
   'YOUR_CLIENT_SECRET',
   'YOUR_REDIRECT_URL',
-  new \Genius\Authentication\Scope([
-      \Genius\Authentication\Scope::SCOPE_ME,
-      \Genius\Authentication\Scope::SCOPE_CREATE_ANNOTATION,
-      \Genius\Authentication\Scope::SCOPE_MANAGE_ANNOTATION,
-      \Genius\Authentication\Scope::SCOPE_VOTE,
+  new \Genius\Authentication\ScopeList([
+      \Genius\Enum\Scope::ME(),
+      \Genius\Enum\Scope::CREATE_ANNOTATION(),
+      \Genius\Enum\Scope::MANAGE_ANNOTATION(),
+      \Genius\Enum\Scope::VOTE(),
   ]),
   null
 );

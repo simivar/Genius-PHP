@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Genius\Authentication;
 
-class Scope
+use Genius\Enum\Scope;
+
+class ScopeList
 {
     public const SCOPE_ME = 'me';
     public const SCOPE_CREATE_ANNOTATION = 'create_annotation';
@@ -14,12 +16,12 @@ class Scope
     protected const SCOPE_SEPARATOR = ' ';
 
     /**
-     * @var string[]
+     * @var Scope[]
      */
     private array $scope = [];
 
     /**
-     * @param string[] $scopes
+     * @param Scope[] $scopes
      */
     public function __construct(array $scopes = [])
     {
@@ -28,34 +30,34 @@ class Scope
         }
     }
 
-    public function addScope(string $scope): self
+    public function addScope(Scope $scope): self
     {
         if ($this->isValidScope($scope)) {
-            $this->scope[$scope] = $scope;
+            $this->scope[(string) $scope] = $scope;
         }
 
         return $this;
     }
 
-    public function removeScope(string $scope): self
+    public function removeScope(Scope $scope): self
     {
         if ($this->isValidScope($scope) && $this->hasScope($scope)) {
-            unset($this->scope[$scope]);
+            unset($this->scope[(string) $scope]);
         }
 
         return $this;
     }
 
-    public function isValidScope(string $scope): bool
+    public function isValidScope(Scope $scope): bool
     {
-        if (in_array($scope, self::getAvailableScopes(), true)) {
+        if (in_array($scope, Scope::values(), true)) {
             return true;
         }
 
         return false;
     }
 
-    public function hasScope(string $scope): bool
+    public function hasScope(Scope $scope): bool
     {
         if (in_array($scope, $this->scope, true)) {
             return true;

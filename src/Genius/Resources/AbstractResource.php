@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Genius\Resources;
 
+use Genius\Enum\Scope;
 use Genius\HttpClient\RequesterInterface;
 
 abstract class AbstractResource
@@ -15,7 +16,7 @@ abstract class AbstractResource
         $this->requester = $requester;
     }
 
-    protected function requireScope(string $scope): bool
+    protected function requireScope(Scope $scope): bool
     {
         return true;
         /*if (!($this->genius->getAuthentication() instanceof OAuth2)) {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Genius\Resources;
 
-use Genius\Authentication\Scope;
+use Genius\Enum\Scope;
 use stdClass;
 
 /**
@@ -14,7 +14,7 @@ final class AccountResource extends AbstractResource
 {
     public function get(string $text_format = 'dom'): stdClass
     {
-        $this->requireScope(Scope::SCOPE_ME);
+        $this->requireScope(Scope::ME());
 
         return $this->requester->get('account', ['text_format' => $text_format]);
     }

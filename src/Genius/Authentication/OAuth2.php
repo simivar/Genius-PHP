@@ -21,19 +21,19 @@ final class OAuth2 implements Authentication
     private string $clientId;
     private string $state;
     private ?string $accessToken;
-    private Scope $scope;
+    private ScopeList $scopeList;
     private ?HttpClient $httpClient;
     private MessageFactory $messageFactory;
     private string $redirectUri;
 
-    public function __construct(string $clientId, string $clientSecret, string $redirectUri, Scope $scope, ?HttpClient $httpClient = null)
+    public function __construct(string $clientId, string $clientSecret, string $redirectUri, ScopeList $scope, ?HttpClient $httpClient = null)
     {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->redirectUri = $redirectUri;
         $this->httpClient = $httpClient;
         $this->messageFactory = MessageFactoryDiscovery::find();
-        $this->scope = $scope;
+        $this->scopeList = $scope;
     }
 
     public function setAccessToken(string $accessToken): OAuth2
@@ -62,7 +62,7 @@ final class OAuth2 implements Authentication
     public function getAuthorizeUrl(): string
     {
         return self::API_URL . 'authorize?client_id=' . $this->clientId .
-            '&redirect_uri=' . $this->redirectUri . '&scope=' . $this->scope . '&state=' . $this->getState() .
+            '&redirect_uri=' . $this->redirectUri . '&scope=' . $this->scopeList . '&state=' . $this->getState() .
             '&response_type=code';
     }
 
@@ -82,9 +82,9 @@ final class OAuth2 implements Authentication
         return $this->state;
     }
 
-    public function getScope(): Scope
+    public function getScopeList(): ScopeList
     {
-        return $this->scope;
+        return $this->scopeList;
     }
 
     /**
