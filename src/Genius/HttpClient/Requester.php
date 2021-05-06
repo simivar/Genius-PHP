@@ -8,30 +8,17 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use stdClass;
 
-class Requester
+final class Requester implements RequesterInterface
 {
     private const OK_STATUS_CODE = 200;
 
     private ClientInterface $httpClient;
-    private RequestBuilder $requestBuilder;
+    private RequestBuilderInterface $requestBuilder;
 
-    public function __construct(ClientInterface $httpClient)
+    public function __construct(ClientInterface $httpClient, RequestBuilderInterface $requestBuilder)
     {
         $this->httpClient = $httpClient;
-    }
-
-    public function setRequestBuilder(RequestBuilder $requestBuilder): void
-    {
         $this->requestBuilder = $requestBuilder;
-    }
-
-    private function getRequestBuilder(): RequestBuilder
-    {
-        if (!isset($this->requestBuilder)) {
-            $this->requestBuilder = new RequestBuilder();
-        }
-
-        return $this->requestBuilder;
     }
 
     public function get(string $uri, array $parameters = [], array $headers = []): stdClass
@@ -77,14 +64,14 @@ class Requester
         );
     }
 
-    protected function sendRequest(
+    private function sendRequest(
         string $method,
         string $uri,
         array $headers = [],
         ?string $body = null
     ): stdClass
     {
-        $request = $this->getRequestBuilder()->build($method, $uri, $headers, $body);
+        $request = $this->requestBuilder->build($method, $uri, $headers, $body);
 
         try {
             $response = $this->httpClient->sendRequest($request);
