@@ -9,6 +9,8 @@ use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
 use Http\Message\Authentication;
 use Http\Message\MessageFactory;
+use JsonException;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 
 final class OAuth2 implements Authentication
@@ -85,6 +87,10 @@ final class OAuth2 implements Authentication
         return $this->scope;
     }
 
+    /**
+     * @throws ClientExceptionInterface
+     * @throws JsonException
+     */
     public function refreshToken(string $code): ?string
     {
         if ($this->accessToken) {
@@ -108,7 +114,7 @@ final class OAuth2 implements Authentication
         );
 
         if (200 === $request->getStatusCode()) {
-            $body = json_decode($request->getBody()->getContents(), false);
+            $body = json_decode($request->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
 
             $this->accessToken = $body->access_token;
 
