@@ -8,7 +8,7 @@ use stdClass;
 /**
  * @see https://docs.genius.com/#songs-h2
  */
-class SongsResource extends AbstractResource
+final class SongsResource extends AbstractResource
 {
     public function get(int $id, string $text_format = 'dom'): stdClass
     {

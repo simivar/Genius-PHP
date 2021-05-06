@@ -8,7 +8,7 @@ use stdClass;
 /**
  * @see https://docs.genius.com/#search-h2
  */
-class SearchResource extends AbstractResource
+final class SearchResource extends AbstractResource
 {
     public function get(string $query): stdClass
     {

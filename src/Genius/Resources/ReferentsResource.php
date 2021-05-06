@@ -8,7 +8,7 @@ use stdClass;
 /**
  * @see https://docs.genius.com/#referents-h2
  */
-class ReferentsResource extends AbstractResource
+final class ReferentsResource extends AbstractResource
 {
     public function get(
         ?int $created_by_id = null,

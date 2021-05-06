@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Moved `Genius\GeniusException` to `Genius\Exception\GeniusException`
 - Moved `Genius\ConnectGeniusException` to `Genius\Exception\ConnectGeniusException`
 - Moved `Genius\Resources\ResourceException` to `Genius\Exception\ResourceException`
+- Marked all `*Resource` classes as `final`
 
 ### Removed
 

@@ -8,7 +8,7 @@ use stdClass;
 /**
  * @see https://docs.genius.com/#web_pages-h2
  */
-class WebPagesResource extends AbstractResource
+final class WebPagesResource extends AbstractResource
 {
     public function get(string $raw_annotatable_url, ?string $canonical_url = null, ?string $og_url = null): stdClass
     {

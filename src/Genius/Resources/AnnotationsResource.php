@@ -9,7 +9,7 @@ use stdClass;
 /**
  * @see https://docs.genius.com/#annotations-h2
  */
-class AnnotationsResource extends AbstractResource
+final class AnnotationsResource extends AbstractResource
 {
     public function get(int $id, string $text_format = 'dom'): stdClass
     {

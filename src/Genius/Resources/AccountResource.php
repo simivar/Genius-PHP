@@ -9,7 +9,7 @@ use stdClass;
 /**
  * @see https://docs.genius.com/#account-h2
  */
-class AccountResource extends AbstractResource
+final class AccountResource extends AbstractResource
 {
     public function get(string $text_format = 'dom'): stdClass
     {
