@@ -1,3 +1,5 @@
 *.stackdump
 .idea/
 vendor/
+composer.lock
+test.php
