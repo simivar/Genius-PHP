@@ -20,7 +20,7 @@ final class OAuth2 implements Authentication
     private string $state;
     private ?string $accessToken;
     private Scope $scope;
-    private HttpClient $httpClient;
+    private ?HttpClient $httpClient;
     private MessageFactory $messageFactory;
     private string $redirectUri;
 
@@ -29,12 +29,7 @@ final class OAuth2 implements Authentication
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->redirectUri = $redirectUri;
-
-        if (!isset($httpClient)) {
-            $this->getHttpClient();
-        } else {
-            $this->httpClient = $httpClient;
-        }
+        $this->httpClient = $httpClient;
         $this->messageFactory = MessageFactoryDiscovery::find();
         $this->setScope($scope);
     }
@@ -46,23 +41,9 @@ final class OAuth2 implements Authentication
         return $this;
     }
 
-    public function setClientId(string $clientId): OAuth2
-    {
-        $this->clientId = $clientId;
-
-        return $this;
-    }
-
     public function setAccessToken(string $access_token): OAuth2
     {
         $this->accessToken = $access_token;
-
-        return $this;
-    }
-
-    public function setRedirectUri(string $redirect_uri): OAuth2
-    {
-        $this->redirectUri = $redirect_uri;
 
         return $this;
     }
@@ -81,20 +62,9 @@ final class OAuth2 implements Authentication
         return $this;
     }
 
-    public function getAccessToken(): ?string
-    {
-        if ($this->hasValidAccessToken()) {
-            return $this->accessToken;
-        }
-
-        $this->accessToken = null;
-
-        return null;
-    }
-
     private function getHttpClient(): HttpClient
     {
-        if (!isset($this->httpClient)) {
+        if (null === $this->httpClient) {
             $this->httpClient = HttpClientDiscovery::find();
         }
 
@@ -122,18 +92,13 @@ final class OAuth2 implements Authentication
         return $this->scope;
     }
 
-    public function hasValidAccessToken(): bool
-    {
-        return null !== $this->accessToken;
-    }
-
     public function refreshToken(string $code): ?string
     {
-        if ($this->getAccessToken()) {
-            return $this->getAccessToken();
+        if ($this->accessToken) {
+            return $this->accessToken;
         }
 
-        $request = $this->httpClient->sendRequest(
+        $request = $this->getHttpClient()->sendRequest(
             $this->messageFactory->createRequest(
                 'POST',
                 self::API_URL . 'token',
@@ -172,12 +137,8 @@ final class OAuth2 implements Authentication
      */
     public function authenticate(RequestInterface $request): RequestInterface
     {
-        if ($this->hasValidAccessToken()) {
-            $header = sprintf('Bearer %s', $this->accessToken);
+        $header = sprintf('Bearer %s', $this->accessToken);
 
-            return $request->withHeader('Authorization', $header);
-        }
-
-        return $request;
+        return $request->withHeader('Authorization', $header);
     }
 }
