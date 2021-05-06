@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Introduced `Genius\Exception\ApiResponseErrorException`
+- Type-hints to all classes properties
 
 ### Changed
 
