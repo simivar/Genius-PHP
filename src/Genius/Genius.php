@@ -37,7 +37,7 @@ class Genius
 
     private function getRequester(): RequesterInterface
     {
-        if (null === $this->requester) {
+        if (!isset($this->requester)) {
             $this->requester = new Requester($this->getClient(), new RequestBuilder());
         }
 
@@ -46,7 +46,7 @@ class Genius
 
     private function getClient(): PluginClient
     {
-        if (null === $this->httpClient) {
+        if (!isset($this->httpClient)) {
             $this->httpClient = $this->getClientConfiguration()->createClient();
         }
 
