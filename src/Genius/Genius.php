@@ -10,7 +10,6 @@ use Genius\HttpClient\RequestBuilder;
 use Genius\HttpClient\Requester;
 use Genius\HttpClient\RequesterInterface;
 use Http\Client\Common\PluginClient;
-use Http\Client\HttpClient;
 use Http\Message\Authentication;
 
 class Genius
@@ -18,7 +17,7 @@ class Genius
     protected Authentication $authentication;
     protected ClientConfigurationInterface $clientConfiguration;
     protected RequesterInterface $requester;
-    protected HttpClient $httpClient;
+    protected PluginClient $httpClient;
 
     public function __construct(Authentication $authentication)
     {

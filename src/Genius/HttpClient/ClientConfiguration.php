@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Genius\HttpClient;
 
+use Http\Client\Common\Plugin;
 use Http\Client\Common\Plugin\AddHostPlugin;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
@@ -65,6 +66,9 @@ final class ClientConfiguration implements ClientConfigurationInterface
         $this->endpoint = $endpoint;
     }
 
+    /**
+     * @return Plugin[]
+     */
     private function getPlugins(): array
     {
         return [

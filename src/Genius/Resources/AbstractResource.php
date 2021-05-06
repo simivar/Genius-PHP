@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Genius\Resources;
 
-use Genius\HttpClient\Requester;
+use Genius\HttpClient\RequesterInterface;
 
-class AbstractResource
+abstract class AbstractResource
 {
-    protected Requester $requester;
+    protected RequesterInterface $requester;
 
-    public function __construct(Requester $requester)
+    public function __construct(RequesterInterface $requester)
     {
         $this->requester = $requester;
     }

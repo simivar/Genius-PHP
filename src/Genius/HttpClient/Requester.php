@@ -12,8 +12,6 @@ use stdClass;
 
 final class Requester implements RequesterInterface
 {
-    private const OK_STATUS_CODE = 200;
-
     private ClientInterface $httpClient;
     private RequestBuilderInterface $requestBuilder;
 
@@ -66,6 +64,11 @@ final class Requester implements RequesterInterface
         );
     }
 
+    /**
+     * @param array<string, string> $headers
+     * @throws ApiResponseErrorException
+     * @throws JsonException
+     */
     private function sendRequest(
         string $method,
         string $uri,

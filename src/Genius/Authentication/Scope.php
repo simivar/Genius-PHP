@@ -13,8 +13,14 @@ class Scope
 
     protected const SCOPE_SEPARATOR = ' ';
 
+    /**
+     * @var string[]
+     */
     private array $scope = [];
 
+    /**
+     * @param string[] $scopes
+     */
     public function __construct(array $scopes = [])
     {
         foreach ($scopes as $scope) {
@@ -58,6 +64,9 @@ class Scope
         return false;
     }
 
+    /**
+     * @return string[]
+     */
     public static function getAvailableScopes(): array
     {
         return [

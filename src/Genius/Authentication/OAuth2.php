@@ -75,7 +75,7 @@ final class OAuth2 implements Authentication
 
     public function getState(): string
     {
-        if (null === $this->state) {
+        if (!isset($this->state)) {
             $this->state = $this->getRandomState();
         }
 
