@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `Genius\ConnectGenius::setUriFactory`
 - `Genius\ConnectGenius::getUriFactory`
 - `Genius\ConnectGenius`
+- `Genius\Authentication\ScopeList` constants, use `Enum\Scope` instead
 
 ## [2.0.0] - 2019-12-27
 

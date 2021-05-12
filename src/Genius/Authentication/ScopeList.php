@@ -6,14 +6,9 @@ namespace Genius\Authentication;
 
 use Genius\Enum\Scope;
 
-class ScopeList
+final class ScopeList
 {
-    public const SCOPE_ME = 'me';
-    public const SCOPE_CREATE_ANNOTATION = 'create_annotation';
-    public const SCOPE_MANAGE_ANNOTATION = 'manage_annotation';
-    public const SCOPE_VOTE = 'vote';
-
-    protected const SCOPE_SEPARATOR = ' ';
+    private const SCOPE_SEPARATOR = ' ';
 
     /**
      * @var Scope[]
@@ -59,24 +54,11 @@ class ScopeList
 
     public function hasScope(Scope $scope): bool
     {
-        if (in_array($scope, $this->scope, true)) {
+        if (array_key_exists((string) $scope, $this->scope)) {
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * @return string[]
-     */
-    public static function getAvailableScopes(): array
-    {
-        return [
-            self::SCOPE_ME,
-            self::SCOPE_CREATE_ANNOTATION,
-            self::SCOPE_MANAGE_ANNOTATION,
-            self::SCOPE_VOTE,
-        ];
     }
 
     public function __toString()
