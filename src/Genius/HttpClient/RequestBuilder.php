@@ -17,12 +17,13 @@ final class RequestBuilder implements RequestBuilderInterface
     public function build(string $method, string $uri, array $headers = [], ?string $body = null): RequestInterface
     {
         $request = $this->getRequestFactory()->createRequest($method, $uri);
-        if (null !== $body) {
-            $request->withBody($this->getStreamFactory()->createStream($body));
-        }
 
         foreach ($headers as $name => $value) {
-            $request->withAddedHeader($name, $value);
+            $request = $request->withAddedHeader($name, $value);
+        }
+
+        if (null !== $body) {
+            $request = $request->withBody($this->getStreamFactory()->createStream($body));
         }
 
         return $request;

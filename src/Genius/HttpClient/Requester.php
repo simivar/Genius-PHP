@@ -34,13 +34,17 @@ final class Requester implements RequesterInterface
         );
     }
 
+    /**
+     * @throws ApiResponseErrorException
+     * @throws JsonException
+     */
     public function post(string $uri, array $parameters = [], array $headers = []): stdClass
     {
         return $this->sendRequest(
             'POST',
             $uri,
             $headers,
-            json_encode($parameters, JSON_THROW_ON_ERROR)
+            http_build_query($parameters)
         );
     }
 
@@ -93,7 +97,7 @@ final class Requester implements RequesterInterface
         }
 
         if (self::OK_STATUS_CODE === $response->getStatusCode()) {
-            return $decodedBody->response;
+            return $decodedBody->response ?? $decodedBody;
         }
 
         if (isset($decodedBody->meta)) {
