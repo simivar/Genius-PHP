@@ -50,7 +50,7 @@ class ScopeList
 
     public function isValidScope(Scope $scope): bool
     {
-        if (in_array($scope, Scope::values(), true)) {
+        if (Scope::isValid($scope->getValue())) {
             return true;
         }
 
