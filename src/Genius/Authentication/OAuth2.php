@@ -61,7 +61,7 @@ final class OAuth2 implements Authentication
 
     public function getAuthorizeUrl(): string
     {
-        return self::API_URL . 'authorize?client_id=' . $this->clientId .
+        return ClientConfigurationInterface::API_URI . 'oauth/authorize?client_id=' . $this->clientId .
             '&redirect_uri=' . $this->redirectUri . '&scope=' . $this->scopeList . '&state=' . $this->getState() .
             '&response_type=code';
     }
