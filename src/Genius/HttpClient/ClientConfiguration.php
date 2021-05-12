@@ -18,12 +18,11 @@ use Psr\Http\Message\UriFactoryInterface;
 
 final class ClientConfiguration implements ClientConfigurationInterface
 {
-    private string $endpoint = 'https://api.genius.com/';
-    private Authentication $authentication;
+    private ?Authentication $authentication;
     private ClientInterface $httpClient;
     private UriFactoryInterface $uriFactory;
 
-    public function __construct(Authentication $authentication)
+    public function __construct(?Authentication $authentication)
     {
         $this->authentication = $authentication;
     }
@@ -61,22 +60,22 @@ final class ClientConfiguration implements ClientConfigurationInterface
         return $this->uriFactory;
     }
 
-    public function setEndpoint(string $endpoint): void
-    {
-        $this->endpoint = $endpoint;
-    }
-
     /**
      * @return Plugin[]
      */
     private function getPlugins(): array
     {
-        return [
-            new AddHostPlugin($this->getUriFactory()->createUri($this->endpoint)),
+        $plugins = [
+            new AddHostPlugin($this->getUriFactory()->createUri(ClientConfigurationInterface::API_URI)),
             new HeaderDefaultsPlugin([
                 'User-Agent' => 'simivar/genius-php; version 3',
             ]),
-            new AuthenticationPlugin($this->authentication),
         ];
+
+        if (null !== $this->authentication) {
+            $plugins[] = new AuthenticationPlugin($this->authentication);
+        }
+
+        return $plugins;
     }
 }
