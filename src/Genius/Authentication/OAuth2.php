@@ -4,35 +4,33 @@ declare(strict_types=1);
 
 namespace Genius\Authentication;
 
-use Http\Client\HttpClient;
-use Http\Discovery\HttpClientDiscovery;
-use Http\Discovery\MessageFactoryDiscovery;
+use Genius\HttpClient\ClientConfiguration;
+use Genius\HttpClient\ClientConfigurationInterface;
+use Genius\HttpClient\RequestBuilder;
+use Genius\HttpClient\Requester;
+use Genius\HttpClient\RequesterInterface;
 use Http\Message\Authentication;
-use Http\Message\MessageFactory;
 use JsonException;
-use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 
 final class OAuth2 implements Authentication
 {
-    private const API_URL = 'https://api.genius.com/oauth/';
-
     private string $clientSecret;
     private string $clientId;
     private string $state;
     private ?string $accessToken;
     private ScopeList $scopeList;
-    private ?HttpClient $httpClient;
-    private MessageFactory $messageFactory;
+    private RequesterInterface $requester;
     private string $redirectUri;
 
-    public function __construct(string $clientId, string $clientSecret, string $redirectUri, ScopeList $scope, ?HttpClient $httpClient = null)
+    public function __construct(string $clientId, string $clientSecret, string $redirectUri, ScopeList $scope)
     {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->redirectUri = $redirectUri;
-        $this->httpClient = $httpClient;
-        $this->messageFactory = MessageFactoryDiscovery::find();
+        $this->requester = new Requester(
+            (new ClientConfiguration(null))->createClient(), new RequestBuilder(),
+        );
         $this->scopeList = $scope;
     }
 
@@ -41,22 +39,6 @@ final class OAuth2 implements Authentication
         $this->accessToken = $accessToken;
 
         return $this;
-    }
-
-    public function setMessageFactory(MessageFactory $messageFactory): OAuth2
-    {
-        $this->messageFactory = $messageFactory;
-
-        return $this;
-    }
-
-    private function getHttpClient(): HttpClient
-    {
-        if (null === $this->httpClient) {
-            $this->httpClient = HttpClientDiscovery::find();
-        }
-
-        return $this->httpClient;
     }
 
     public function getAuthorizeUrl(): string
@@ -88,40 +70,26 @@ final class OAuth2 implements Authentication
     }
 
     /**
-     * @throws ClientExceptionInterface
+     * @throws \Genius\Exception\ApiResponseErrorException
      * @throws JsonException
      */
-    public function refreshToken(string $code): ?string
+    public function refreshToken(string $code): string
     {
-        if ($this->accessToken) {
+        if (isset($this->accessToken)) {
             return $this->accessToken;
         }
 
-        $request = $this->getHttpClient()->sendRequest(
-            $this->messageFactory->createRequest(
-                'POST',
-                self::API_URL . 'token',
-                [],
-                http_build_query([
-                    'code' => $code,
-                    'client_secret' => $this->clientSecret,
-                    'grant_type' => 'authorization_code',
-                    'client_id' => $this->clientId,
-                    'redirect_uri' => $this->redirectUri,
-                    'response_type' => 'code',
-                ])
-            )
-        );
+        $response = $this->requester->post('oauth/token', [
+            'code' => $code,
+            'client_secret' => $this->clientSecret,
+            'grant_type' => 'authorization_code',
+            'client_id' => $this->clientId,
+            'redirect_uri' => $this->redirectUri,
+            'response_type' => 'code',
+        ]);
+        $this->accessToken = $response->access_token;
 
-        if (200 === $request->getStatusCode()) {
-            $body = json_decode($request->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
-
-            $this->accessToken = $body->access_token;
-
-            return $this->accessToken;
-        }
-
-        return null;
+        return $this->accessToken;
     }
 
     private function getRandomState(int $length = 32): string
