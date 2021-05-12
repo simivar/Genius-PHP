@@ -5,16 +5,11 @@ declare(strict_types=1);
 namespace Genius;
 
 use Genius\Factory\RequesterFactoryTrait;
-use Genius\HttpClient\ClientConfigurationInterface;
-use Http\Client\Common\PluginClient;
 use Http\Message\Authentication;
 
-class Genius
+final class Genius
 {
     use RequesterFactoryTrait;
-
-    protected ClientConfigurationInterface $clientConfiguration;
-    protected PluginClient $httpClient;
 
     public function __construct(Authentication $authentication)
     {

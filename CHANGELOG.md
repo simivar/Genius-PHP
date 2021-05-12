@@ -10,22 +10,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Introduced `Genius\Exception\ApiResponseErrorException`
 - PHP-CS-Fixer with PSR12 configuration
-- Enum `Genius\Enum\Scope` 
+- Enum `Genius\Enum\Scope`
+- `Genius\HttpClient\ClientConfiguration`
+- `Genius\HttpClient\Requester`
+- `Genius\HttpClient\RequestBuilder`
 
 ### Changed
 
+- Marked `Genius\Genius` as final
 - All classes properties now have type-hints
 - Object returned by and Exceptions thrown by `Genius\Resources\AbstractResource::sendRequest` changed
   now on `success` it returns data from `result` object preperty
   and on `error` it throws `Genius\Exception\ApiResponseErrorException`. 
   This means that return value and exceptions of **every** `Resource` has changed!
-- `Genius\ConnectGenius` is based on PSR-17 Discovery instead of deprecated `Http\Discovery\UriFactoryDiscovery`
-- `Genius\ConnectGenius::getUriFactory` returns now `Psr\Http\Message\UriFactoryInterface`
-  instead of `Psr\Http\Message\UriInterface`
-- `Genius\ConnectGenius::setUriFactory` now takes as first parameter `Psr\Http\Message\UriFactoryInterface`
-  instead of `Psr\Http\Message\UriInterface`
-- `Genius\Genius::getRequestFactory` returns now `Psr\Http\Message\RequestFactoryInterface` 
-  instead of `Http\Message\MessageFactory`
 - Moved `Genius\GeniusException` to `Genius\Exception\GeniusException`
 - Moved `Genius\ConnectGeniusException` to `Genius\Exception\ConnectGeniusException`
 - Moved `Genius\Resources\ResourceException` to `Genius\Exception\ResourceException`
@@ -38,6 +35,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Support for PHP lower than 7.4
 - Public methods `OAuth2::hasValidAccessToken()`, `OAuth2::getAccessToken()`, `OAuth2::setRedirectUri()`, `OAuth2::setClientId()`, `OAuth2::setScope()`
 - Scope constants from `ScopeList` class, use `Genius\Enum\Scope` instead
+- `Genius\Genius::getRequestFactory`
+- `Genius\ConnectGenius::setUriFactory`
+- `Genius\ConnectGenius::getUriFactory`
+- `Genius\ConnectGenius`
 
 ## [2.0.0] - 2019-12-27
 
