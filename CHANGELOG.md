@@ -4,6 +4,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
+## [3.0.0] - 2021-05-12
+
+### Added
+
+- Introduced `Genius\Exception\ApiResponseErrorException`
+- PHP-CS-Fixer with PSR12 configuration
+- Enum `Genius\Enum\Scope`
+- `Genius\HttpClient\ClientConfiguration`
+- `Genius\HttpClient\Requester`
+- `Genius\HttpClient\RequestBuilder`
+
+### Changed
+
+- Marked `Genius\Genius` as final
+- All classes properties now have type-hints
+- Object returned by and Exceptions thrown by `Genius\Resources\AbstractResource::sendRequest` changed
+  now on `success` it returns data from `result` object preperty
+  and on `error` it throws `Genius\Exception\ApiResponseErrorException`. 
+  This means that return value and exceptions of **every** `Resource` has changed!
+- Moved `Genius\GeniusException` to `Genius\Exception\GeniusException`
+- Moved `Genius\ConnectGeniusException` to `Genius\Exception\ConnectGeniusException`
+- Moved `Genius\Resources\ResourceException` to `Genius\Exception\ResourceException`
+- Marked all `*Resource` classes as `final`
+- Renamed `OAuth2::getAuthUrl()` to `OAuth2::getAuthorizeUrl()`
+- Renamed `Scope` to `ScopeList`
+
+### Removed
+
+- Support for PHP lower than 7.4
+- Public methods `OAuth2::hasValidAccessToken()`, `OAuth2::getAccessToken()`, `OAuth2::setRedirectUri()`, `OAuth2::setClientId()`, `OAuth2::setScope()`
+- Scope constants from `ScopeList` class, use `Genius\Enum\Scope` instead
+- `Genius\Genius::getRequestFactory`
+- `Genius\ConnectGenius::setUriFactory`
+- `Genius\ConnectGenius::getUriFactory`
+- `Genius\ConnectGenius`
+- `Genius\Authentication\ScopeList` constants, use `Enum\Scope` instead
+
 ## [2.0.0] - 2019-12-27
 
 ### Added
@@ -56,6 +93,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Initial release
 
+[3.0.0]: https://github.com/simivar/Genius-PHP/compare/2.0.0...3.0.0
 [2.0.0]: https://github.com/simivar/Genius-PHP/compare/1.0.1...2.0.0
 [1.0.1]: https://github.com/simivar/Genius-PHP/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/simivar/Genius-PHP/compare/0.1.0...1.0.0

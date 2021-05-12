@@ -1,98 +1,53 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Genius;
 
-use Genius\Authentication\OAuth2;
-use Genius\Resources;
-use Http\Client\Common\PluginClient;
-use Http\Client\HttpClient;
-use Http\Discovery\MessageFactoryDiscovery;
+use Genius\Factory\RequesterFactoryTrait;
 use Http\Message\Authentication;
-use Http\Message\MessageFactory;
 
-/**
- * Class Genius
- * @package Genius
- *
- * @method Resources\AccountResource getAccountResource()
- * @method Resources\AnnotationsResource getAnnotationsResource()
- * @method Resources\ArtistsResource getArtistsResource()
- * @method Resources\ReferentsResource getReferentsResource()
- * @method Resources\SearchResource getSearchResource()
- * @method Resources\SongsResource getSongsResource()
- * @method Resources\WebPagesResource getWebPagesResource()
- */
-class Genius
+final class Genius
 {
-    /** @var MessageFactory */
-    protected $requestFactory;
-    
-    /** @var PluginClient */
-    protected $httpClient;
-    
-    /** @var Authentication|OAuth2 */
-    protected $authentication;
-    
-    /** @var array All created resource objects */
-    protected $resourceObjects = [];
-    
-    /**
-     * ClientGenius constructor.
-     *
-     * @param Authentication $authentication
-     * @param HttpClient|null $httpClient
-     * @throws ConnectGeniusException
-     */
-    public function __construct(Authentication $authentication, ?HttpClient $httpClient = null)
+    use RequesterFactoryTrait;
+
+    public function __construct(Authentication $authentication)
     {
         $this->authentication = $authentication;
-        $this->requestFactory = MessageFactoryDiscovery::find();
-        
-        $connection = new ConnectGenius($authentication);
-        
-        if ($httpClient !== null) {
-            $connection->setHttpClient($httpClient);
-        }
-        
-        $this->httpClient = $connection->createConnection();
     }
 
-    public function getHttpClient(): PluginClient
+    public function getAccountResource(): Resources\AccountResource
     {
-        return $this->httpClient;
+        return new Resources\AccountResource($this->getRequester());
     }
 
-    /**
-     * @return Authentication|OAuth2
-     */
-    public function getAuthentication(): Authentication
+    public function getAnnotationsResource(): Resources\AnnotationsResource
     {
-        return $this->authentication;
+        return new Resources\AnnotationsResource($this->getRequester());
     }
 
-    public function getRequestFactory(): MessageFactory
+    public function getArtistsResource(): Resources\ArtistsResource
     {
-        return $this->requestFactory;
+        return new Resources\ArtistsResource($this->getRequester());
     }
-    
-    public function __call($name, $arguments)
+
+    public function getReferentsResource(): Resources\ReferentsResource
     {
-        if (strpos($name, 'get') !== 0) {
-            return false;
-        }
-        
-        $name = '\\Genius\\Resources\\' . substr($name, 3);
-        if (!class_exists($name)) {
-            return false;
-        }
-        
-        if (isset($this->resourceObjects[ $name ])) {
-            return $this->resourceObjects[ $name ];
-        }
-        
-        $this->resourceObjects[ $name ] = new $name($this);
-        
-        return $this->resourceObjects[ $name ];
+        return new Resources\ReferentsResource($this->getRequester());
+    }
+
+    public function getSearchResource(): Resources\SearchResource
+    {
+        return new Resources\SearchResource($this->getRequester());
+    }
+
+    public function getSongsResource(): Resources\SongsResource
+    {
+        return new Resources\SongsResource($this->getRequester());
+    }
+
+    public function getWebPagesResource(): Resources\WebPagesResource
+    {
+        return new Resources\WebPagesResource($this->getRequester());
     }
 }

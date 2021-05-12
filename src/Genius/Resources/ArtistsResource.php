@@ -1,28 +1,35 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Genius\Resources;
 
+use stdClass;
+
 /**
- * Class ArtistsResource
- * @package Genius\Resources
- *
  * @see https://docs.genius.com/#artists-h2
  */
-class ArtistsResource extends AbstractResource
+final class ArtistsResource extends AbstractResource
 {
-    public function get(int $id, string $text_format = 'dom'): \stdClass
+    public function get(int $id, string $text_format = 'dom'): stdClass
     {
-        return $this->sendRequest('GET', 'artists/' . $id . '/?' . http_build_query(['text_format' => $text_format]));
+        return $this->requester->get(
+            sprintf('artists/%s', $id),
+            ['text_format' => $text_format]
+        );
     }
-    
-    public function getSongs(int $id, string $sort = 'title', ?int $per_page = null, ?int $page = null): \stdClass
+
+    public function getSongs(int $id, string $sort = 'title', ?int $per_page = null, ?int $page = null): stdClass
     {
         $data = [
             'sort' => $sort,
             'per_page' => $per_page,
-            'page' => $page
+            'page' => $page,
         ];
-        return $this->sendRequest('GET', 'artists/' . $id . '/songs/?' . http_build_query($data));
+
+        return $this->requester->get(
+            sprintf('artists/%s/songs', $id),
+            $data
+        );
     }
 }

@@ -1,18 +1,21 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Genius\Resources;
 
+use stdClass;
+
 /**
- * Class SongsResource
- * @package Genius\Resources
- *
  * @see https://docs.genius.com/#songs-h2
  */
-class SongsResource extends AbstractResource
+final class SongsResource extends AbstractResource
 {
-    public function get(int $id, string $text_format = 'dom'): \stdClass
+    public function get(int $id, string $text_format = 'dom'): stdClass
     {
-        return $this->sendRequest('GET', 'songs/' . $id . '/?' . http_build_query(['text_format' => $text_format]));
+        return $this->requester->get(
+            sprintf('songs/%s', $id),
+            ['text_format' => $text_format]
+        );
     }
 }
