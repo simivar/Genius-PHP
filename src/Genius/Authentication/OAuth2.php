@@ -4,23 +4,21 @@ declare(strict_types=1);
 
 namespace Genius\Authentication;
 
-use Genius\HttpClient\ClientConfiguration;
+use Genius\Factory\RequesterFactoryTrait;
 use Genius\HttpClient\ClientConfigurationInterface;
-use Genius\HttpClient\RequestBuilder;
-use Genius\HttpClient\Requester;
-use Genius\HttpClient\RequesterInterface;
 use Http\Message\Authentication;
 use JsonException;
 use Psr\Http\Message\RequestInterface;
 
 final class OAuth2 implements Authentication
 {
+    use RequesterFactoryTrait;
+
     private string $clientSecret;
     private string $clientId;
     private string $state;
     private ?string $accessToken;
     private ScopeList $scopeList;
-    private RequesterInterface $requester;
     private string $redirectUri;
 
     public function __construct(string $clientId, string $clientSecret, string $redirectUri, ScopeList $scope)
@@ -28,9 +26,6 @@ final class OAuth2 implements Authentication
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->redirectUri = $redirectUri;
-        $this->requester = new Requester(
-            (new ClientConfiguration(null))->createClient(), new RequestBuilder(),
-        );
         $this->scopeList = $scope;
     }
 
@@ -79,7 +74,7 @@ final class OAuth2 implements Authentication
             return $this->accessToken;
         }
 
-        $response = $this->requester->post('oauth/token', [
+        $response = $this->getRequester()->post('oauth/token', [
             'code' => $code,
             'client_secret' => $this->clientSecret,
             'grant_type' => 'authorization_code',

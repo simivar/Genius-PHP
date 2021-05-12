@@ -4,61 +4,21 @@ declare(strict_types=1);
 
 namespace Genius;
 
-use Genius\HttpClient\ClientConfiguration;
+use Genius\Factory\RequesterFactoryTrait;
 use Genius\HttpClient\ClientConfigurationInterface;
-use Genius\HttpClient\RequestBuilder;
-use Genius\HttpClient\Requester;
-use Genius\HttpClient\RequesterInterface;
 use Http\Client\Common\PluginClient;
 use Http\Message\Authentication;
 
 class Genius
 {
-    protected Authentication $authentication;
+    use RequesterFactoryTrait;
+
     protected ClientConfigurationInterface $clientConfiguration;
-    protected RequesterInterface $requester;
     protected PluginClient $httpClient;
 
     public function __construct(Authentication $authentication)
     {
         $this->authentication = $authentication;
-    }
-
-    public function setClientConfiguration(ClientConfigurationInterface $clientConfiguration): void
-    {
-        $this->clientConfiguration = $clientConfiguration;
-    }
-
-    public function setRequester(RequesterInterface $requester): void
-    {
-        $this->requester = $requester;
-    }
-
-    private function getRequester(): RequesterInterface
-    {
-        if (!isset($this->requester)) {
-            $this->requester = new Requester($this->getClient(), new RequestBuilder());
-        }
-
-        return $this->requester;
-    }
-
-    private function getClient(): PluginClient
-    {
-        if (!isset($this->httpClient)) {
-            $this->httpClient = $this->getClientConfiguration()->createClient();
-        }
-
-        return $this->httpClient;
-    }
-
-    private function getClientConfiguration(): ClientConfigurationInterface
-    {
-        if (!isset($this->clientConfiguration)) {
-            $this->clientConfiguration = new ClientConfiguration($this->authentication);
-        }
-
-        return $this->clientConfiguration;
     }
 
     public function getAccountResource(): Resources\AccountResource
